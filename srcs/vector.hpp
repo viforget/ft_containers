@@ -434,7 +434,78 @@ namespace	ft
 			return (this->_alloc);
 		}
 	};
+
 //---------- Non-member function overloads ----------//
+
+	template <class T, class Alloc>
+	bool operator== (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+	{
+		if (lhs.size() == rhs.size())
+		{
+			for (size_t i = 0; i < rhs.size(); i++)
+			{
+				if (!(lhs[i] == rhs[i]))
+					return (false);
+			}
+			return (true);
+		}
+		return (false);
+	}
+
+	template <class T, class Alloc>
+	bool operator!= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+	{
+		return (!(lhs == rhs));
+	}
+
+	template <class T, class Alloc>
+	bool operator<  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+	{
+		size_t i = 0;
+
+		while(i < lhs.size() && i < rhs.size())
+		{
+			if (lhs[i] < rhs[i])
+				return (true);
+			else if (rhs[i] < lhs[i])
+				return (false);
+			i++;
+		}
+		if (lhs.size() < rhs.size())
+			return (true);
+		else
+			return (false);
+	}
+
+	template <class T, class Alloc>
+	bool operator<= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+	{
+		if (lhs == rhs || lhs < rhs)
+			return (true);
+		return (false);
+	}
+
+	template <class T, class Alloc>
+	bool operator>  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+	{
+		return (rhs < lhs);
+	}
+
+	template <class T, class Alloc>
+	bool operator>= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+	{
+		if (lhs == rhs || rhs < lhs)
+			return (true);
+		return (false);
+	}
+
+	template <class T, class Alloc>
+	void swap (vector<T,Alloc>& x, vector<T,Alloc>& y)
+	{
+		vector<T,Alloc>	z(x);
+		x = y;
+		y = z;
+	}
 
 };
 
