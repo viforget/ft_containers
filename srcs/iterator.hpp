@@ -71,6 +71,28 @@ namespace	ft
 				return (tmp);
 			}
 
+			random_iterator		operator+(difference_type n)
+			{
+				return(random_iterator(this->_pointer + n));
+			}
+
+			random_iterator		operator-(difference_type n)
+			{
+				return(random_iterator(this->_pointer - n));
+			}
+
+			difference_type		operator-(random_iterator const & b)
+			{
+				return(this->_pointer - b._pointer);
+			}
+
+			bool				operator<(random_iterator const & ref) {return (*(this->_pointer) < *(ref._pointer));}
+			bool				operator<=(random_iterator const & ref) {return (*(this->_pointer) <= *(ref._pointer));}
+			bool				operator>(random_iterator const & ref) {return (*(this->_pointer) > *(ref._pointer));}
+			bool				operator>=(random_iterator const & ref) {return (*(this->_pointer) >= *(ref._pointer));}
+			bool				operator==(random_iterator const & ref) {return (*(this->_pointer) == *(ref._pointer));}
+			bool				operator!=(random_iterator const & ref) {return (*(this->_pointer) != *(ref._pointer));}
+
 		private:
 			pointer	_pointer;
 	};
