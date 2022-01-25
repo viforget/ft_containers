@@ -63,6 +63,7 @@ namespace	ft
 			container_type	_C;
 	};
 
+//---------- Member functions ----------//
 	template <class T, class Container>
 	bool operator== (const stack<T,Container>& lhs, const stack<T,Container>& rhs)
 	{
