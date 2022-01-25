@@ -19,6 +19,7 @@ namespace	ft
 		Alloc		_alloc;	
 
 	public:
+//---------- Member types ----------//
 		typedef T												value_type;
 		typedef Alloc											allocator_type;
 		typedef typename allocator_type::reference				reference;
@@ -503,6 +504,7 @@ namespace	ft
 	void swap (vector<T,Alloc>& x, vector<T,Alloc>& y)
 	{
 		vector<T,Alloc>	z(x);
+
 		x = y;
 		y = z;
 	}
