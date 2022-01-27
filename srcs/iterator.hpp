@@ -6,10 +6,10 @@
 
 namespace	ft
 {
-	template</*class Category, */class T, class Distance = std::ptrdiff_t, class Pointer = T*, class Reference = T&>
+	template<class Category, class T, class Distance = std::ptrdiff_t, class Pointer = T*, class Reference = T&>
 	struct iterator
 	{
-		//typedef Category	iterator_category;
+		typedef Category	iterator_category;
 		typedef T			value_type;
 		typedef Distance	difference_type;
 		typedef Pointer		pointer;
@@ -19,12 +19,14 @@ namespace	ft
 	template < class T >
 	class random_iterator
 	{
+		private:
+			T*	_pointer;
 		public:
-			//typedef ft::iterator<T>::iterator_category	iterator_category;
-			typedef typename ft::iterator<T>::value_type		value_type;
-			typedef typename ft::iterator<T>::difference_type	difference_type;
-			typedef typename ft::iterator<T>::pointer			pointer;
-			typedef typename ft::iterator<T>::reference			reference;
+			typedef typename ft::iterator<random_iterator, T>::iterator_category	iterator_category;
+			typedef typename ft::iterator<random_iterator, T>::value_type			value_type;
+			typedef typename ft::iterator<random_iterator, T>::difference_type		difference_type;
+			typedef typename ft::iterator<random_iterator, T>::pointer				pointer;
+			typedef typename ft::iterator<random_iterator, T>::reference			reference;
 			
 //---------- Constructors ----------//
 
@@ -76,6 +78,11 @@ namespace	ft
 				return(random_iterator(this->_pointer + n));
 			}
 
+			/*random_iterator		operator+(size_t n)
+			{
+				return(random_iterator(this->_pointer + n));
+			}*/
+
 			random_iterator		operator-(difference_type n)
 			{
 				return(random_iterator(this->_pointer - n));
@@ -86,26 +93,24 @@ namespace	ft
 				return(this->_pointer - b._pointer);
 			}
 
-			bool				operator<(random_iterator const & ref) {return (*(this->_pointer) < *(ref._pointer));}
-			bool				operator<=(random_iterator const & ref) {return (*(this->_pointer) <= *(ref._pointer));}
-			bool				operator>(random_iterator const & ref) {return (*(this->_pointer) > *(ref._pointer));}
-			bool				operator>=(random_iterator const & ref) {return (*(this->_pointer) >= *(ref._pointer));}
-			bool				operator==(random_iterator const & ref) {return (*(this->_pointer) == *(ref._pointer));}
-			bool				operator!=(random_iterator const & ref) {return (*(this->_pointer) != *(ref._pointer));}
+			bool				operator<(random_iterator const & ref) {return ((this->_pointer) < (ref._pointer));}
+			bool				operator<=(random_iterator const & ref) {return ((this->_pointer) <= (ref._pointer));}
+			bool				operator>(random_iterator const & ref) {return ((this->_pointer) > (ref._pointer));}
+			bool				operator>=(random_iterator const & ref) {return ((this->_pointer) >= (ref._pointer));}
+			bool				operator==(random_iterator const & ref) {return ((this->_pointer) == (ref._pointer));}
+			bool				operator!=(random_iterator const & ref) {return ((this->_pointer) != (ref._pointer));}
 
-		private:
-			pointer	_pointer;
 	};
 
 	template < class T >
 	class reverse_random_iterator
 	{
 		public:
-			//typedef ft::iterator<T>::iterator_category	iterator_category;
-			typedef typename ft::iterator<T>::value_type		value_type;
-			typedef typename ft::iterator<T>::difference_type	difference_type;
-			typedef typename ft::iterator<T>::pointer			pointer;
-			typedef typename ft::iterator<T>::reference			reference;
+			typedef typename T::iterator_category	iterator_category;
+			typedef typename T::value_type		value_type;
+			typedef typename T::difference_type	difference_type;
+			typedef typename T::pointer			pointer;
+			typedef typename T::reference		reference;
 			
 //---------- Constructors ----------//
 

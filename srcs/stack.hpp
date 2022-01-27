@@ -13,7 +13,6 @@ namespace	ft
 			typedef size_t		size_type;
 //---------- Member functions ----------//
 			explicit stack (const container_type& ctnr = container_type()) : _C(ctnr) {}
-			//~stack();
 			bool empty() const
 			{
 				return (this->_C.empty());
@@ -99,7 +98,6 @@ namespace	ft
 	{
 		return (lhs._C >= rhs._C);
 	}
-
 }
 
 #endif

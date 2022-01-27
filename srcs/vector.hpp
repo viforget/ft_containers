@@ -6,6 +6,7 @@
 # include <iterator>
 # include <stdexcept>
 # include "iterator.hpp"
+# include "utils.hpp"
 
 namespace	ft
 {
@@ -47,7 +48,7 @@ namespace	ft
 		explicit vector (size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type()) : _size(n), _capacity(n), _alloc(alloc)
 		{
 			this->_array = this->_alloc.allocate(n);
-			for (unsigned int i = 0; i < n; i++)
+			for (size_type i = 0; i < n; i++)
 				this->_alloc.construct(this->_array + i, val);
 		}
 
@@ -55,7 +56,7 @@ namespace	ft
 		//Create an array with every data between first and last
 		//If the first iterator is further than the last one; throw an exception
 		template <class InputIterator>
-        vector (InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type()) : _size(0), _capacity(0), _alloc(alloc)
+        vector (InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type(), typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = nullptr) : _size(0), _capacity(0), _alloc(alloc)
 		{
 			InputIterator first2 = first;
 			
@@ -65,7 +66,7 @@ namespace	ft
 				this->_size++;
 			this->_array = this->_alloc.allocate(this->_size);
 			this->_capacity = this->_size;
-			for (std::size_t i = 0; i < this->_size; i++)
+			for (size_t i = 0; i < this->_size; i++)
 				this->_alloc.construct(this->_array + i, *(first + i));
 		}
 
@@ -129,37 +130,42 @@ namespace	ft
 
 		iterator rbegin()
 		{
-			return (iterator(this->_array + this->_size));
+			return (reverse_iterator(this->_array + this->_size));
 		}
 
 		const_iterator rbegin() const
 		{
-			return (const_iterator(this->_array + this->_size));
+			return (const_reverse_iterator(this->_array + this->_size));
 		}
 
 		iterator rend()
 		{
-			return (iterator(this->_array));
+			return (reverse_iterator(this->_array));
 		}
 
 		const_iterator rend() const
 		{
-			return (const_iterator(this->_array));
+			return (const_reverse_iterator(this->_array));
 		}
 
 //---------- Capacity ----------//
+
+		// Return the size of the vector
 
 		size_type	size() const
 		{
 			return (this->_size);
 		}
 
+		//Return the maximum capacity of the vector. This number is given by the allocator
+
 		size_type	max_size() const
 		{
 			return (this->_alloc.max_size());
 		}
 
-		//Resize : if n is bigger than the size, alloc more else, delete lasts element until the size is equal to n
+		//Resize : if n is bigger than the size, alloc more, else delete lasts element until
+		// the size is equal to n
 
 		void resize (size_type n, value_type val = value_type())
 		{
@@ -183,15 +189,21 @@ namespace	ft
 			this->_size = n;
 		}
 
+		//Return the capacity
+
 		size_type capacity() const
 		{
 			return (this->_capacity);
 		}
 
+		//Return true if the vector is empty
+
 		bool empty() const
 		{
 			return (this->_size == 0 ? true : false);
 		}
+
+		//Allocate a new array if n is bigger than the capacity of the vector
 
 		void reserve (size_type n)
 		{
@@ -275,11 +287,10 @@ namespace	ft
 		
 //---------- Modifiers ----------//
 
-
 		// The resize is for destroy every data in the vector
 		// The reserve is to allocate more capacity if needed
 		template <class InputIterator>
-  		void assign (InputIterator first, InputIterator last)
+  		void assign (InputIterator first, InputIterator last, typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = nullptr)
 		{
 			if (first > last)
 				throw(std::length_error("vector"));
@@ -291,7 +302,6 @@ namespace	ft
 				this->_alloc.construct(this->_array + (this->_size - (last - first)), *first);
 				first++;
 			}
-
 		}
 
 		void assign (size_type n, const value_type& val)
@@ -312,7 +322,8 @@ namespace	ft
 
 		void pop_back()
 		{
-			this->resize(this->_size - 1);
+			if (this->_size > 0)
+				this->resize(this->_size - 1);
 		}
 
 		iterator insert (iterator position, const value_type& val)
@@ -387,16 +398,21 @@ namespace	ft
 			}
 		}
 
+		//erase : destroy the data at (position)
+
 		iterator erase (iterator position)
 		{
+			this->_alloc.destroy(position);
 			while(position < this->end() - 1)
 			{
 				*position = *(position + 1);
 				position++;
 			}
-			this->resize(this->_size - 1);
+			this->size--;
 			return(position);
 		}
+
+		//erase : delete every data in the vector between first and last
 
 		iterator erase (iterator first, iterator last)
 		{
@@ -405,6 +421,11 @@ namespace	ft
 
 			if (first > last)
 				throw(std::length_error("vector"));
+			while (last > first)
+			{
+				last--;
+				this->_alloc.destroy(last);
+			}
 			while (first + n < this->end())
 			{
 				*(first + i) = *(first + i + n);
@@ -414,12 +435,16 @@ namespace	ft
 			return (first);
 		}
 
+		//swap : swap 2 vectors (this, x) by unsing a temporary tmp (y)
+
 		void swap (vector& x)
 		{
 			vector	y(x);
 			x = *this;
 			*this = y;
 		}
+
+		//clear : empty the vector
 
 		void clear()
 		{
