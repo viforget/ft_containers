@@ -28,9 +28,9 @@ namespace	ft
 		typedef typename Alloc::pointer							pointer;
 		typedef typename Alloc::const_pointer					const_pointer;
 		typedef	ft::random_iterator<value_type>					iterator;
-		typedef	ft::random_iterator<const value_type>			const_iterator;
+		typedef	ft::random_iterator<value_type>			const_iterator;
 		typedef ft::reverse_random_iterator<iterator>			reverse_iterator;
-		typedef ft::reverse_random_iterator<const_iterator>	const_reverse_iterator;
+		typedef ft::reverse_random_iterator<const_iterator>		const_reverse_iterator;
 		typedef std::ptrdiff_t									difference_type;
 		typedef std::size_t										size_type;
 
@@ -60,14 +60,17 @@ namespace	ft
 		{
 			InputIterator first2 = first;
 			
-			if (first > last)
-				throw(std::length_error("vector"));
-			for (; first2 < last; first2++)
+			//if (first > last)
+			//	throw(std::length_error("vector"));
+			for (; first2 != last; first2++)
 				this->_size++;
 			this->_array = this->_alloc.allocate(this->_size);
 			this->_capacity = this->_size;
 			for (size_t i = 0; i < this->_size; i++)
-				this->_alloc.construct(this->_array + i, *(first + i));
+			{
+				this->_alloc.construct(this->_array + i, *first);
+				first++;
+			}
 		}
 
 		//4th constructor; take an other vector
@@ -292,14 +295,23 @@ namespace	ft
 		template <class InputIterator>
   		void assign (InputIterator first, InputIterator last, typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = nullptr)
 		{
-			if (first > last)
-				throw(std::length_error("vector"));
-			this->resize(0);
-			this->reserve(last - first);
-			this->_size = last - first;
-			while (first < last)
+			InputIterator	last2 = last;
+			size_t			s = 0;
+
+			while(last2 != first)
 			{
-				this->_alloc.construct(this->_array + (this->_size - (last - first)), *first);
+				last2--;
+				s++;
+			}
+			//if (first > last)
+			//	throw(std::length_error("vector"));
+			this->resize(0);
+			this->reserve(s);
+			this->_size = s;
+			while (first != last)
+			{
+				this->_alloc.construct(this->_array + (this->_size - s), *first);
+				s--;
 				first++;
 			}
 		}
@@ -343,7 +355,7 @@ namespace	ft
 				e--;
 			}
 			this->_alloc.construct(this->_array + i, val);
-			return (position);
+			return (iterator(this->_array + i));
 		}
 
 		void insert (iterator position, size_type n, const value_type& val)
@@ -369,34 +381,91 @@ namespace	ft
 			}
 		}
 
-		template <class InputIterator>
-	    void insert (iterator position, InputIterator first, InputIterator last)
-		{
-			size_t	n = last - first;
-			size_t	i = 0;
-			size_t	e = this->_size - 1 + n;
+		// tmp : allow to count the differenxe between first and last
+		// n : differenxe between first and last
+		// i : index to shift the data after position after the new data and to stock the new data
 
-			if (first > last)
-				throw(std::length_error("vector"));
-			for (iterator it = this->begin(); it < position; it++)
+		// template <class InputIterator>
+	    // void insert (iterator position, InputIterator first, InputIterator last, 
+		// typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = nullptr)
+		// {
+		// 	InputIterator	tmp = first;
+		// 	size_t			pos = position - this->_array;
+		// 	size_t			n = 0;
+		// 	size_t			i = 0;
+
+		// 	for(InputIterator tp = first; tp != last; tp++)
+		// 			n++;
+		// 	this->reserve(this->size() + n);
+		// 	this->_size += n; 
+		// 	tmp = last;
+		// 	while (position + i != this->end())
+		// 		i++;
+		// 	while(position + n + i != this->end())
+		// 	{
+		// 		*tmp = *(position + i);
+		// 		i--;
+		// 		tmp--;
+		// 	}
+		// 	i = pos;
+		// 	tmp = first;
+		// 	while (i < this->_size)
+		// 	{
+		// 		this->_alloc.construct(&this->_array[i], *(first));
+		// 	//	std::cout << "AAA " << *first << std::endl;
+		// 		i++;
+		// 		tmp++;
+		// 		first++;
+		// 	}
+		// }
+
+			template <class InputIterator>
+			void insert (iterator position, InputIterator first, InputIterator last,
+			typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = nullptr)
 			{
-				i++;
+				size_type index = position - this->_array;
+				pointer tmp;
+				size_t i = 0;
+				size_t j = 0;
+				size_t n = 0;
+
+				for(InputIterator tmp = first; tmp != last; tmp++)
+					n++;
+
+				if (this->_capacity > this->_size + n)
+					tmp = this->_alloc.allocate(this->_capacity);
+
+				else
+				{
+					tmp = this->_alloc.allocate(this->_capacity + n);
+					this->_capacity += n;
+				}
+
+				while(i < index)
+				{
+					this->_alloc.construct(&tmp[i], this->_array[i]);
+					i++;
+				}
+				while(j < n)
+				{
+					this->_alloc.construct(&tmp[i + j], (*first));
+					j++;
+					first++;
+				}
+				j+=i;
+				while(i < this->_size)
+				{
+					this->_alloc.construct(&tmp[j], this->_array[i]);
+					i++;
+					j++;
+				}
+				for(size_type i = 0; i < this->_size; ++i)
+					this->_alloc.destroy(&this->_array[i]);
+				this->_alloc.deallocate(this->_array, this->_capacity);
+
+				this->_size+=n;
+				this->_array = tmp;
 			}
-			this->reserve(this->_size + n);
-			this->_size += n;
-			std::cout << "a " << e << std::endl;
-			while(e >= i + n)
-			{
-				this->_array[e] = this->_array[e - n];
-				e--;
-			}
-			while (e >= i && e != static_cast<size_t>(-1))
-			{
-				this->_alloc.construct(this->_array + e, *(first + e - i));
-				n--;
-				e--;
-			}
-		}
 
 		//erase : destroy the data at (position)
 
@@ -408,7 +477,7 @@ namespace	ft
 				*position = *(position + 1);
 				position++;
 			}
-			this->size--;
+			this->_size--;
 			return(position);
 		}
 
@@ -439,9 +508,26 @@ namespace	ft
 
 		void swap (vector& x)
 		{
-			vector	y(x);
-			x = *this;
-			*this = y;
+			T*			array;
+			std::size_t	size;
+			std::size_t	capacity;
+			Alloc		alloc;	
+
+
+			array = x._array;
+			capacity = x._capacity;
+			size = x._size;
+			alloc = x._alloc;
+
+			x._array = this->_array;
+			x._capacity = this->_capacity;
+			x._size = this->_size;
+			x._alloc = this->_alloc;
+
+			this->_array = array;
+			this->_capacity = capacity;
+			this->_size = size;
+			this->_alloc = alloc;
 		}
 
 		//clear : empty the vector
