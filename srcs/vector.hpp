@@ -28,7 +28,7 @@ namespace	ft
 		typedef typename Alloc::pointer							pointer;
 		typedef typename Alloc::const_pointer					const_pointer;
 		typedef	ft::random_iterator<value_type>					iterator;
-		typedef	ft::random_iterator<value_type>			const_iterator;
+		typedef	ft::random_iterator</*const */value_type>			const_iterator;
 		typedef ft::reverse_random_iterator<iterator>			reverse_iterator;
 		typedef ft::reverse_random_iterator<const_iterator>		const_reverse_iterator;
 		typedef std::ptrdiff_t									difference_type;
@@ -471,8 +471,14 @@ namespace	ft
 
 		iterator erase (iterator position)
 		{
-			this->_alloc.destroy(position);
-			while(position < this->end() - 1)
+			size_t i = 0;
+
+			for (iterator it = this->begin(); it < position; it++)
+			{
+				i++;
+			}
+			this->_alloc.destroy(this->_array + i);
+			while(position + 1 < this->end())
 			{
 				*position = *(position + 1);
 				position++;
@@ -490,11 +496,15 @@ namespace	ft
 
 			if (first > last)
 				throw(std::length_error("vector"));
+			for (iterator it = this->begin(); it < last; it++)
+				i++;
 			while (last > first)
 			{
 				last--;
-				this->_alloc.destroy(last);
+				i--;
+				this->_alloc.destroy(this->_array + i);
 			}
+			i = 0;
 			while (first + n < this->end())
 			{
 				*(first + i) = *(first + i + n);

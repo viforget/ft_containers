@@ -93,13 +93,31 @@ namespace	ft
 				return(this->_pointer - b._pointer);
 			}
 
+			random_iterator	&	operator-=(difference_type n)
+			{
+				this->_pointer -= n;
+				return(*this);
+			}
+
+			random_iterator	 &	operator+=(difference_type n)
+			{
+				this->_pointer += n;
+				return(*this);
+			}
+
 			bool				operator<(random_iterator const & ref) {return ((this->_pointer) < (ref._pointer));}
 			bool				operator<=(random_iterator const & ref) {return ((this->_pointer) <= (ref._pointer));}
 			bool				operator>(random_iterator const & ref) {return ((this->_pointer) > (ref._pointer));}
 			bool				operator>=(random_iterator const & ref) {return ((this->_pointer) >= (ref._pointer));}
 			bool				operator==(random_iterator const & ref) {return ((this->_pointer) == (ref._pointer));}
 			bool				operator!=(random_iterator const & ref) {return ((this->_pointer) != (ref._pointer));}
+			
 			friend random_iterator operator-(random_iterator const & a, random_iterator const & b);
+			friend bool	operator<(random_iterator const & a, random_iterator const & ref) {return ((a._pointer) < (ref._pointer));}
+			friend bool	operator<=(random_iterator const & a, random_iterator const & ref) {return ((a._pointer) <= (ref._pointer));}
+			friend bool	operator>(random_iterator const & a, random_iterator const & ref) {return ((a._pointer) > (ref._pointer));}
+			friend bool	operator>=(random_iterator const & a, random_iterator const & ref) {return ((a._pointer) >= (ref._pointer));}
+
 	};
 
 	template < class T >
@@ -107,6 +125,24 @@ namespace	ft
 	{
 		return(a._pointer - b._pointer);
 	}
+
+	template < class T >
+	random_iterator<T>		operator+(int n, random_iterator<T> it)
+	{
+		return(it + n);
+	}
+
+	template < class T >
+	bool	operator<(random_iterator<T> const & a, random_iterator<T> const & ref) {return ((a._pointer) < (ref._pointer));}
+
+	template < class T >
+	bool	operator<=(random_iterator<T> const & a, random_iterator<T> const & ref) {return ((a._pointer) <= (ref._pointer));}
+
+	template < class T >
+	bool	operator>(random_iterator<T> const & a, random_iterator<T> const & ref) {return ((a._pointer) > (ref._pointer));}
+
+	template < class T >
+	bool	operator>=(random_iterator<T> const & a, random_iterator<T> const & ref) {return ((a._pointer) >= (ref._pointer));}
 
 	/*template < class T >
 	std::ostream&	operator<<( std::ostream &flux, random_iterator<T> const & a )
@@ -164,6 +200,7 @@ namespace	ft
 				this->_pointer++;
 				return (*this);
 			}
+
 			reverse_random_iterator		operator--(int)
 			{
 				reverse_random_iterator tmp = *this;
@@ -174,6 +211,7 @@ namespace	ft
 		private:
 			pointer	_pointer;
 	};
+	
 };
 
 #endif
