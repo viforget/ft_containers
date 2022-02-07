@@ -3,7 +3,7 @@
 
 # include <iostream>
 # include <memory>
-
+# include "vector.hpp"
 namespace	ft
 {
 	template<class Category, class T, class Distance = std::ptrdiff_t, class Pointer = T*, class Reference = T&>
@@ -31,6 +31,7 @@ namespace	ft
 //---------- Constructors ----------//
 
 			random_iterator( void ) : _pointer(NULL) {}
+			random_iterator( const random_iterator & ref ) : _pointer(ref._pointer) {}
 			random_iterator( pointer pointer ) : _pointer(pointer) {}
 
 //---------- Destructor ----------//
@@ -38,12 +39,22 @@ namespace	ft
 			~random_iterator( void ) {};
 			
 //---------- Operators ----------//
+	
+template< class T2 > struct remove_const                { typedef T2 type; };
+template< class T2 > struct remove_const<const T2>       { typedef T2 type; };
 
-			void operator=(random_iterator const & ref)
+			random_iterator &  operator= (const random_iterator & rhs)
 			{
-				this->_pointer = ref._pointer;
+				this->_pointer = rhs._pointer;
+				return (*this);
 			}
-			
+
+			// random_iterator<T> &  operator= (const random_iterator<typename remove_const<T>::type > & rhs)
+			// {
+			// 	this->_pointer = rhs._pointer;
+			// 	return (*this);
+			// }
+
 			reference operator*() const
 			{
 				return(*this->_pointer);
@@ -175,7 +186,6 @@ namespace	ft
 			void operator=( reverse_random_iterator const & ref )
 			{
 				this->_pointer = ref._pointer;
-				return (this);
 			}
 			
 			reference operator*() const

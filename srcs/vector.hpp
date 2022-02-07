@@ -27,8 +27,8 @@ namespace	ft
 		typedef typename allocator_type::const_reference		const_reference;
 		typedef typename Alloc::pointer							pointer;
 		typedef typename Alloc::const_pointer					const_pointer;
-		typedef	ft::random_iterator<value_type>					iterator;
-		typedef	ft::random_iterator</*const */value_type>			const_iterator;
+		typedef	ft::random_iterator<T>							iterator;
+		typedef	ft::random_iterator<T>					const_iterator;
 		typedef ft::reverse_random_iterator<iterator>			reverse_iterator;
 		typedef ft::reverse_random_iterator<const_iterator>		const_reverse_iterator;
 		typedef std::ptrdiff_t									difference_type;
@@ -380,92 +380,32 @@ namespace	ft
 				e--;
 			}
 		}
+		
+		template <class InputIterator>
+		void insert (iterator position, InputIterator first, InputIterator last, 
+		typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = nullptr)
+		{
+			size_t 	n = 0;
+			size_t 	pos = 0;
+			size_t 	i = 0;
 
-		// tmp : allow to count the differenxe between first and last
-		// n : differenxe between first and last
-		// i : index to shift the data after position after the new data and to stock the new data
-
-		// template <class InputIterator>
-	    // void insert (iterator position, InputIterator first, InputIterator last, 
-		// typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = nullptr)
-		// {
-		// 	InputIterator	tmp = first;
-		// 	size_t			pos = position - this->_array;
-		// 	size_t			n = 0;
-		// 	size_t			i = 0;
-
-		// 	for(InputIterator tp = first; tp != last; tp++)
-		// 			n++;
-		// 	this->reserve(this->size() + n);
-		// 	this->_size += n; 
-		// 	tmp = last;
-		// 	while (position + i != this->end())
-		// 		i++;
-		// 	while(position + n + i != this->end())
-		// 	{
-		// 		*tmp = *(position + i);
-		// 		i--;
-		// 		tmp--;
-		// 	}
-		// 	i = pos;
-		// 	tmp = first;
-		// 	while (i < this->_size)
-		// 	{
-		// 		this->_alloc.construct(&this->_array[i], *(first));
-		// 	//	std::cout << "AAA " << *first << std::endl;
-		// 		i++;
-		// 		tmp++;
-		// 		first++;
-		// 	}
-		// }
-
-			template <class InputIterator>
-			void insert (iterator position, InputIterator first, InputIterator last,
-			typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = nullptr)
-			{
-				size_type index = position - this->_array;
-				pointer tmp;
-				size_t i = 0;
-				size_t j = 0;
-				size_t n = 0;
-
-				for(InputIterator tmp = first; tmp != last; tmp++)
+			//n is the difference between first and last
+			for(InputIterator tmp = first; tmp != last; tmp++)
 					n++;
-
-				if (this->_capacity > this->_size + n)
-					tmp = this->_alloc.allocate(this->_capacity);
-
-				else
-				{
-					tmp = this->_alloc.allocate(this->_capacity + n);
-					this->_capacity += n;
-				}
-
-				while(i < index)
-				{
-					this->_alloc.construct(&tmp[i], this->_array[i]);
-					i++;
-				}
-				while(j < n)
-				{
-					this->_alloc.construct(&tmp[i + j], (*first));
-					j++;
-					first++;
-				}
-				j+=i;
-				while(i < this->_size)
-				{
-					this->_alloc.construct(&tmp[j], this->_array[i]);
-					i++;
-					j++;
-				}
-				for(size_type i = 0; i < this->_size; ++i)
-					this->_alloc.destroy(&this->_array[i]);
-				this->_alloc.deallocate(this->_array, this->_capacity);
-
-				this->_size+=n;
-				this->_array = tmp;
+			//pos is the index of position
+			for(iterator tmp = this->begin(); tmp != position; tmp++)
+					pos++;
+			this->reserve(this->_size + n);
+			position = this->begin() + pos;
+			for(iterator tmp = this->end() + n; tmp >= position + n; tmp--)
+				*tmp = *(tmp - n);
+			for (InputIterator tmp = first; tmp != last; tmp++)
+			{
+				this->_alloc.construct(&position[i], *(tmp));
+				i++;
 			}
+			this->_size += n;
+		}
 
 		//erase : destroy the data at (position)
 
@@ -505,7 +445,7 @@ namespace	ft
 				this->_alloc.destroy(this->_array + i);
 			}
 			i = 0;
-			while (first + n < this->end())
+			while (first + n + i < this->end())
 			{
 				*(first + i) = *(first + i + n);
 				i++;
