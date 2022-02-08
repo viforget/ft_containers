@@ -28,7 +28,7 @@ namespace	ft
 		typedef typename Alloc::pointer							pointer;
 		typedef typename Alloc::const_pointer					const_pointer;
 		typedef	ft::random_iterator<T>							iterator;
-		typedef	ft::random_iterator<T>					const_iterator;
+		typedef	ft::random_iterator<const T>					const_iterator;
 		typedef ft::reverse_random_iterator<iterator>			reverse_iterator;
 		typedef ft::reverse_random_iterator<const_iterator>		const_reverse_iterator;
 		typedef std::ptrdiff_t									difference_type;

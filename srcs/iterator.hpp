@@ -22,6 +22,8 @@ namespace	ft
 		private:
 			T*	_pointer;
 		public:
+template< class T2 > struct remove_const                { typedef T2 type; };
+template< class T2 > struct remove_const<const T2>       { typedef T2 type; };
 			typedef typename ft::iterator<random_iterator, T>::iterator_category	iterator_category;
 			typedef typename ft::iterator<random_iterator, T>::value_type			value_type;
 			typedef typename ft::iterator<random_iterator, T>::difference_type		difference_type;
@@ -31,7 +33,8 @@ namespace	ft
 //---------- Constructors ----------//
 
 			random_iterator( void ) : _pointer(NULL) {}
-			random_iterator( const random_iterator & ref ) : _pointer(ref._pointer) {}
+			//random_iterator( const random_iterator & ref ) : _pointer(ref._pointer) {}
+			random_iterator( const random_iterator<typename remove_const<T>::type > & ref ) : _pointer(ref.get_pointer()) {}
 			random_iterator( pointer pointer ) : _pointer(pointer) {}
 
 //---------- Destructor ----------//
@@ -40,26 +43,29 @@ namespace	ft
 			
 //---------- Operators ----------//
 	
-template< class T2 > struct remove_const                { typedef T2 type; };
-template< class T2 > struct remove_const<const T2>       { typedef T2 type; };
 
-			random_iterator &  operator= (const random_iterator & rhs)
-			{
-				this->_pointer = rhs._pointer;
-				return (*this);
-			}
-
-			// random_iterator<T> &  operator= (const random_iterator<typename remove_const<T>::type > & rhs)
+			// random_iterator &  operator= (const random_iterator & rhs)
 			// {
 			// 	this->_pointer = rhs._pointer;
 			// 	return (*this);
 			// }
+
+			random_iterator<T> &  operator= (const random_iterator<typename remove_const<T>::type > & rhs)
+			{
+				this->_pointer = rhs.get_pointer();
+				return (*this);
+			}
 
 			reference operator*() const
 			{
 				return(*this->_pointer);
 			}
 			
+			typename remove_const<T>::type* get_pointer() const
+			{
+				return(this->_pointer);
+			}	
+
 			random_iterator&	operator++()
 			{
 				this->_pointer++;
