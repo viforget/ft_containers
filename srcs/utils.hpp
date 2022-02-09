@@ -40,9 +40,10 @@ namespace	ft
 	template<> struct is_integral<unsigned int> : public ft::integral_constant<bool, true> {};
 	template<> struct is_integral<unsigned long int> : public ft::integral_constant<bool, true> {};
 	template<> struct is_integral<unsigned long long int> : public ft::integral_constant<bool, true> {};
-
-	//is_integral<int>
-
+	
+	// remove const : const is remove from the template
+	template< class T2 > struct remove_const                { typedef T2 type; };
+	template< class T2 > struct remove_const<const T2>       { typedef T2 type; };
 }
 
 #endif

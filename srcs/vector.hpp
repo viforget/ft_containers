@@ -6,6 +6,7 @@
 # include <iterator>
 # include <stdexcept>
 # include "iterator.hpp"
+# include "reverse_iterator.hpp"
 # include "utils.hpp"
 
 namespace	ft
@@ -29,8 +30,8 @@ namespace	ft
 		typedef typename Alloc::const_pointer					const_pointer;
 		typedef	ft::random_iterator<T>							iterator;
 		typedef	ft::random_iterator<const T>					const_iterator;
-		typedef ft::reverse_random_iterator<iterator>			reverse_iterator;
-		typedef ft::reverse_random_iterator<const_iterator>		const_reverse_iterator;
+		typedef ft::reverse_iterator<iterator>			reverse_iterator;
+		typedef ft::reverse_iterator<const_iterator>		const_reverse_iterator;
 		typedef std::ptrdiff_t									difference_type;
 		typedef std::size_t										size_type;
 
@@ -222,8 +223,8 @@ namespace	ft
 
 				while(nb < n)
 					nb *= 2;
-				if (nb > this->max_size())
-					nb = this->max_size();
+				//if (nb > this->max_size())
+				//	nb = this->max_size();
 				array = this->_alloc.allocate(nb);
 				for (size_t i = 0; i < this->_size; i++)
 				{
@@ -397,7 +398,7 @@ namespace	ft
 					pos++;
 			this->reserve(this->_size + n);
 			position = this->begin() + pos;
-			for(iterator tmp = this->end() + n; tmp >= position + n; tmp--)
+			for(iterator tmp = this->end() + n - 1; tmp >= position + n; tmp--)
 				*tmp = *(tmp - n);
 			for (InputIterator tmp = first; tmp != last; tmp++)
 			{

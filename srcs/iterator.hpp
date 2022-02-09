@@ -4,6 +4,10 @@
 # include <iostream>
 # include <memory>
 # include "vector.hpp"
+//# include "reverse_iterator.hpp"
+# include "utils.hpp"
+
+
 namespace	ft
 {
 	template<class Category, class T, class Distance = std::ptrdiff_t, class Pointer = T*, class Reference = T&>
@@ -15,15 +19,16 @@ namespace	ft
 		typedef Pointer		pointer;
 		typedef Reference	reference;
 	};
-	
+
+	template <class T2>
+	class reverse_random_iterator;
+
 	template < class T >
 	class random_iterator
 	{
 		private:
 			T*	_pointer;
 		public:
-template< class T2 > struct remove_const                { typedef T2 type; };
-template< class T2 > struct remove_const<const T2>       { typedef T2 type; };
 			typedef typename ft::iterator<random_iterator, T>::iterator_category	iterator_category;
 			typedef typename ft::iterator<random_iterator, T>::value_type			value_type;
 			typedef typename ft::iterator<random_iterator, T>::difference_type		difference_type;
@@ -33,8 +38,8 @@ template< class T2 > struct remove_const<const T2>       { typedef T2 type; };
 //---------- Constructors ----------//
 
 			random_iterator( void ) : _pointer(NULL) {}
-			//random_iterator( const random_iterator & ref ) : _pointer(ref._pointer) {}
 			random_iterator( const random_iterator<typename remove_const<T>::type > & ref ) : _pointer(ref.get_pointer()) {}
+			random_iterator( const reverse_random_iterator<typename remove_const<T>::type > & ref ) : _pointer(ref.get_pointer()) {}
 			random_iterator( pointer pointer ) : _pointer(pointer) {}
 
 //---------- Destructor ----------//
@@ -71,6 +76,7 @@ template< class T2 > struct remove_const<const T2>       { typedef T2 type; };
 				this->_pointer++;
 				return (*this);
 			}
+
 			random_iterator		operator++(int)
 			{
 				random_iterator tmp = *this;
@@ -122,6 +128,11 @@ template< class T2 > struct remove_const<const T2>       { typedef T2 type; };
 				return(*this);
 			}
 
+			pointer 			operator->(void)
+			{
+				return &(this->operator*());
+			}
+
 			bool				operator<(random_iterator const & ref) {return ((this->_pointer) < (ref._pointer));}
 			bool				operator<=(random_iterator const & ref) {return ((this->_pointer) <= (ref._pointer));}
 			bool				operator>(random_iterator const & ref) {return ((this->_pointer) > (ref._pointer));}
@@ -134,7 +145,9 @@ template< class T2 > struct remove_const<const T2>       { typedef T2 type; };
 			friend bool	operator<=(random_iterator const & a, random_iterator const & ref) {return ((a._pointer) <= (ref._pointer));}
 			friend bool	operator>(random_iterator const & a, random_iterator const & ref) {return ((a._pointer) > (ref._pointer));}
 			friend bool	operator>=(random_iterator const & a, random_iterator const & ref) {return ((a._pointer) >= (ref._pointer));}
-
+			friend bool	operator==(random_iterator const & a, random_iterator const & ref) {return ((a._pointer) == (ref._pointer));}
+			friend bool	operator!=(random_iterator const & a, random_iterator const & ref) {return ((a._pointer) != (ref._pointer));}
+			
 	};
 
 	template < class T >
@@ -161,73 +174,13 @@ template< class T2 > struct remove_const<const T2>       { typedef T2 type; };
 	template < class T >
 	bool	operator>=(random_iterator<T> const & a, random_iterator<T> const & ref) {return ((a._pointer) >= (ref._pointer));}
 
-	/*template < class T >
-	std::ostream&	operator<<( std::ostream &flux, random_iterator<T> const & a )
-	{
-		flux << a;
-    	return flux;
-	}*/
-
 	template < class T >
-	class reverse_random_iterator
-	{
-		public:
-			typedef typename T::iterator_category	iterator_category;
-			typedef typename T::value_type		value_type;
-			typedef typename T::difference_type	difference_type;
-			typedef typename T::pointer			pointer;
-			typedef typename T::reference		reference;
-			
-//---------- Constructors ----------//
-
-			reverse_random_iterator( void ) : _pointer(NULL) {}
-			reverse_random_iterator( pointer pointer ) : _pointer(pointer) {}
-
-//---------- Destructor ----------//
-
-			~reverse_random_iterator( void ) {};
-			
-//---------- Operators ----------//
-
-			void operator=( reverse_random_iterator const & ref )
-			{
-				this->_pointer = ref._pointer;
-			}
-			
-			reference operator*() const
-			{
-				return(*this->_array);
-			}
-			
-			reverse_random_iterator&	operator++()
-			{
-				this->_pointer--;
-				return (*this);
-			}
-			reverse_random_iterator		operator++(int)
-			{
-				reverse_random_iterator tmp = *this;
-				this->_pointer--;
-				return (tmp);
-			}
-
-			reverse_random_iterator&	operator--()
-			{
-				this->_pointer++;
-				return (*this);
-			}
-
-			reverse_random_iterator		operator--(int)
-			{
-				reverse_random_iterator tmp = *this;
-				this->_pointer++;
-				return (tmp);
-			}
-
-		private:
-			pointer	_pointer;
-	};
+	bool	operator==(random_iterator<T> const & a, random_iterator<T> const & ref) {return ((a._pointer) == (ref._pointer));}
 	
+	template < class T >
+	bool	operator!=(random_iterator<T> const & a, random_iterator<T> const & ref) {return ((a._pointer) != (ref._pointer));}
+
+
 };
 
 #endif
