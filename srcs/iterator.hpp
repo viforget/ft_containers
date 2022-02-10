@@ -38,8 +38,8 @@ namespace	ft
 //---------- Constructors ----------//
 
 			random_iterator( void ) : _pointer(NULL) {}
-			random_iterator( const random_iterator<typename remove_const<T>::type > & ref ) : _pointer(ref.get_pointer()) {}
-			random_iterator( const reverse_random_iterator<typename remove_const<T>::type > & ref ) : _pointer(ref.get_pointer()) {}
+			random_iterator( const random_iterator<typename remove_const<T>::type > & ref ) : _pointer(ref.base()) {}
+			random_iterator( const reverse_random_iterator<typename remove_const<T>::type > & ref ) : _pointer(ref.base()) {}
 			random_iterator( pointer pointer ) : _pointer(pointer) {}
 
 //---------- Destructor ----------//
@@ -57,7 +57,7 @@ namespace	ft
 
 			random_iterator<T> &  operator= (const random_iterator<typename remove_const<T>::type > & rhs)
 			{
-				this->_pointer = rhs.get_pointer();
+				this->_pointer = rhs.base();
 				return (*this);
 			}
 
@@ -66,7 +66,7 @@ namespace	ft
 				return(*this->_pointer);
 			}
 			
-			typename remove_const<T>::type* get_pointer() const
+			T* base() const
 			{
 				return(this->_pointer);
 			}	

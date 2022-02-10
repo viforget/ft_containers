@@ -30,8 +30,8 @@ namespace	ft
 		typedef typename Alloc::const_pointer					const_pointer;
 		typedef	ft::random_iterator<T>							iterator;
 		typedef	ft::random_iterator<const T>					const_iterator;
-		typedef ft::reverse_iterator<iterator>			reverse_iterator;
-		typedef ft::reverse_iterator<const_iterator>		const_reverse_iterator;
+		typedef ft::reverse_iterator<iterator>					reverse_iterator;
+		typedef ft::reverse_iterator<const_iterator>			const_reverse_iterator;
 		typedef std::ptrdiff_t									difference_type;
 		typedef std::size_t										size_type;
 
@@ -132,22 +132,22 @@ namespace	ft
 			return (const_iterator(this->_array + this->_size));
 		}
 
-		iterator rbegin()
+		reverse_iterator rbegin()
 		{
 			return (reverse_iterator(this->_array + this->_size));
 		}
 
-		const_iterator rbegin() const
+		const_reverse_iterator rbegin() const
 		{
 			return (const_reverse_iterator(this->_array + this->_size));
 		}
 
-		iterator rend()
+		reverse_iterator rend()
 		{
 			return (reverse_iterator(this->_array));
 		}
 
-		const_iterator rend() const
+		const_reverse_iterator rend() const
 		{
 			return (const_reverse_iterator(this->_array));
 		}
