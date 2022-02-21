@@ -29,9 +29,9 @@ namespace	ft
 			this->_node = ref._node;
 		}
 	
-		T*		operator*() const
+		T&		operator*() const
 		{
-			return (this->_node.data);
+			return (this->_node->data->second);
 		}
 
 		map_iterator &	operator++()
