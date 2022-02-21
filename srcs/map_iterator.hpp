@@ -39,15 +39,15 @@ namespace	ft
 			node	*n;
 
 			this->_node;
-			if (!this->node->left->leaf())
+			if (!this->node->right->leaf())
 			{
-				n = this->node->left;
+				n = this->node->right;
 				while(!n->left->leaf())
 					n = n->left;
 				this->_node = n;
 				return(*this);
 			}
-			
+
 		}
 	};
 	
