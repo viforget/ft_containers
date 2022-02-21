@@ -7,7 +7,8 @@
 # include <functional>
 #include "map_utils.hpp"
 
-#include <iostream>
+# define L 0
+# define R 1
 
 namespace ft
 {
@@ -27,13 +28,13 @@ namespace ft
 //---------- Constructors ----------//
 
 			// Basic constructor; create the first node of a binary tree, no parent and both child as NULL
-			node() : parent(NULL), left(NULL), right(NULL), side(0) {}
+			node() : parent(NULL), left(NULL), right(NULL), side(-1) {}
 
 			// Leaf constructor; create a node with a parent but both child as NULL, no leaf node cannot have NULL as child
 			node( node * par, bool sid ) : parent(par), left(NULL), right(NULL), side(sid) {}
 
 			//Node constructor; create a node and give it a value
-			node( node * par, const value_type& val, bool sid ) : parent(par), left(new node(this), 0), right(new node(this), 1), side(sid) {}
+			node( node * par, const value_type& val, bool sid ) : parent(par), left(new node(this), L), right(new node(this), R), side(sid) {}
 
 			// Copy constructor
 			node( const node & ref ) : parent(ref.parent), left(ref.left), right(ref.right), side(ref.side) {}
@@ -65,13 +66,13 @@ namespace ft
 			//set the left or right child to child //POTENTIALLY USELESS
 			void	set_child( node * child, int sid )
 			{
-				if (!sid)
+				if (sid == L)
 				{
 					if (!this->left.leaf())
 						delete this->left;
 					this->left = child;
 				}
-				else if (sid == 1)
+				else if (sid == R)
 				{
 					if (!this->right.leaf())
 						delete this->right;
@@ -84,8 +85,8 @@ namespace ft
 			{
 				if (this->leaf())
 				{
-					this->left = new node(this, 0);
-					this->right = new node(this, 1);
+					this->left = new node(this, L);
+					this->right = new node(this, R);
 					// this->data = val;
 					this->data = new value_type(val);
 				}
