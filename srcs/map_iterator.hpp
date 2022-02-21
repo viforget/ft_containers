@@ -34,6 +34,10 @@ namespace	ft
 			return (this->_node->data->second);
 		}
 
+		// Operator ++ : First check if the current node has a right child, in wich case it will retrun the leftest descendant of the right child
+		//	else check if the current node is a left child, in wich case return his parent
+		//	else check if the current node is a right child, in wich case return the parent of the first left ancestor
+
 		map_iterator &	operator++()
 		{
 			node<Key, T>	*n;
@@ -69,6 +73,8 @@ namespace	ft
 			++*this;
 			return (tmp);
 		}
+
+		// Operator-- : the oposite algorithm of the operator++
 
 		map_iterator &	operator--()
 		{
