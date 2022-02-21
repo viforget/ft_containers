@@ -16,12 +16,12 @@ namespace ft
 	struct node
 	{
 		public:
-			node*				parent;
-			node*				left;
-			node*				right;
-			ft::pair<Key, T>	data;
-			Compare				comp;
-			bool				side;
+			node*					parent;
+			node*					left;
+			node*					right;
+			ft::pair<const Key, T>	*data;
+			Compare					comp;
+			bool					side;
 
 			typedef	ft::pair<const Key, T>	value_type;
 //---------- Constructors ----------//
@@ -40,7 +40,11 @@ namespace ft
 
 //---------- Destructor ----------//
 
-			~node() {}
+			~node()
+			{
+				if (data)
+					delete data;
+			}
 
 //---------- Member functions ----------//
 			
@@ -82,7 +86,8 @@ namespace ft
 				{
 					this->left = new node(this, 0);
 					this->right = new node(this, 1);
-					this->data = val;
+					// this->data = val;
+					this->data = new value_type(val);
 				}
 			}
 
@@ -98,15 +103,15 @@ namespace ft
 			}
 
 			//recursive function that insert a new element
-			void	insert(const value_type& val, Alloc alloc)
+			void	insert(const value_type& val, Alloc alloc=std::allocator<pair<const Key,T> >())
 			{
 				if (this->leaf())
 					this->leaf_to_node(val, alloc);
-				else if (this->comp(this->data.first, val.first))
+				else if (this->comp(this->data->first, val.first))
 				{
 					this->right->insert(val, alloc);
 				}
-				else if (this->comp(val.first, this->data.first))
+				else if (this->comp(val.first, this->data->first))
 				{
 					this->left->insert(val, alloc);
 				}

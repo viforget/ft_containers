@@ -10,13 +10,13 @@ namespace	ft
 	class map_iterator
 	{
 	private:
-		node<const Key, T>	*_node;
+		node<Key, T>	*_node;
 	public:
 //---------- Constructors ----------//
 
 		map_iterator() : _node(NULL) {};
-		map_iterator( const map_iterator & ref) : _node(ref.node) {};
-		map_iterator( const node<const Key, T> & n) : _node(n) {};
+		map_iterator( const map_iterator & ref) : _node(ref._node) {};
+		map_iterator( node<Key, T> * n) : _node(n) {};
 
 //---------- Destructor ----------//
 
@@ -26,7 +26,7 @@ namespace	ft
 
 		void	operator=(const map_iterator & ref)
 		{
-			this->_node = ref.node;
+			this->_node = ref._node;
 		}
 	
 		T*		operator*() const
@@ -36,9 +36,8 @@ namespace	ft
 
 		map_iterator &	operator++()
 		{
-			node<const Key, T>	*n;
+			node<Key, T>	*n;
 
-			this->_node;
 			if (!this->_node->right->leaf())
 			{
 				n = this->_node->right;
@@ -46,11 +45,11 @@ namespace	ft
 					n = n->left;
 				this->_node = n;
 			}
-			else if (this->parent && this->_node.side == 0)
+			else if (this->_node->parent && this->_node->side == 0)
 			{
-				this = this.parent;
+				this->_node = this->_node->parent;
 			}
-			else if (this->parent)
+			else if (this->_node->parent)
 			{
 				n = this->_node->parent;
 				while (n->parent && n->side != 0)
