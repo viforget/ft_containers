@@ -6,17 +6,20 @@
 
 namespace	ft
 {
-	template <class Key, class T>
+	template <class T>
 	class map_iterator
 	{
 	private:
-		node<Key, T>	*_node;
+		node<typename T::first_type, typename T::second_type	>	*_node;
 	public:
+		typedef	typename T::first_type				key_type;
+		typedef	typename T::second_type				mapped_type;
+		typedef node<key_type, mapped_type>			node_type;
 //---------- Constructors ----------//
 
 		map_iterator() : _node(NULL) {};
 		map_iterator( const map_iterator & ref) : _node(ref._node) {};
-		map_iterator( node<Key, T> * n) : _node(n) {};
+		map_iterator( node_type * n) : _node(n) {};
 
 //---------- Destructor ----------//
 
@@ -29,7 +32,7 @@ namespace	ft
 			this->_node = ref._node;
 		}
 	
-		pair<const Key, T>&	operator*() const
+		T&	operator*() const
 		{
 			return (this->_node->data);
 		}
@@ -40,7 +43,7 @@ namespace	ft
 
 		map_iterator &	operator++()
 		{
-			node<Key, T>	*n;
+			node_type	*n;
 
 			if (!this->_node->right->leaf())
 			{
@@ -79,7 +82,7 @@ namespace	ft
 
 		map_iterator &	operator--()
 		{
-			node<Key, T>	*n;
+			node_type	*n;
 
 			if (!this->_node->left->leaf())
 			{
@@ -115,7 +118,7 @@ namespace	ft
 
 		bool	operator==(const map_iterator ref) const {return (this->_node == ref._node);}
 		bool	operator!=(const map_iterator ref) const {return (this->_node != ref._node);}
-		pair<const Key, T>*	operator->() const { return (&(this->node->value));}
+		T*	operator->() const { return (&(this->node->value));}
 
 	};
 	
