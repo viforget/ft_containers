@@ -45,22 +45,65 @@ namespace	ft
 					n = n->left;
 				this->_node = n;
 			}
-			else if (this->_node->parent && this->_node->side == 0)
+			else if (this->_node->parent && this->_node->side == L)
 			{
 				this->_node = this->_node->parent;
 			}
 			else if (this->_node->parent)
 			{
 				n = this->_node->parent;
-				while (n->parent && n->side != 0)
+				while (n->parent && n->side != L)
 				{
 					n = n->parent;
 				}
-				if (n && n->parent && n->side == 0)
+				n = n->parent;
+				if (n)
 					this->_node = n;
 			}
 			return (*this);
+		}
 
+		map_iterator 	operator++(int)
+		{
+			map_iterator	tmp = *this;
+			++*this;
+			return (tmp);
+		}
+
+		map_iterator &	operator--()
+		{
+			node<Key, T>	*n;
+
+			if (!this->_node->left->leaf())
+			{
+				n = this->_node->left;
+				while(!n->right->leaf())
+					n = n->right;
+				this->_node = n;
+			}
+			else if (this->_node->parent && this->_node->side == R)
+			{
+				this->_node = this->_node->parent;
+			}
+			else if (this->_node->parent)
+			{
+				n = this->_node->parent;
+				while (n->parent && n->side != R)
+				{
+					n = n->parent;
+				}
+				n = n->parent;
+				if (n)
+					this->_node = n;
+			}
+			return (*this);
+		}
+
+		map_iterator 	operator--(int)
+		{
+			map_iterator	tmp = *this;
+			--*this;
+			return (tmp);
 		}
 	};
 	
