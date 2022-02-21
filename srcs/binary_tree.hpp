@@ -19,24 +19,24 @@ namespace ft
 			node*				parent;
 			node*				left;
 			node*				right;
-			ft::pair<Key, T>	data; //CREATE FT::PAIR
+			ft::pair<Key, T>	data;
 			Compare				comp;
-			bool				red;
+			bool				side;
 
 			typedef	ft::pair<const Key, T>	value_type;
 //---------- Constructors ----------//
 
-			// Basic constructor; create the first node of a binary tree, no parent and both child as leaf
-			node() : parent(NULL), left(NULL), right(NULL), red(0) {}
+			// Basic constructor; create the first node of a binary tree, no parent and both child as NULL
+			node() : parent(NULL), left(NULL), right(NULL), side(0) {}
 
 			// Leaf constructor; create a node with a parent but both child as NULL, no leaf node cannot have NULL as child
-			node( node * par ) : parent(par), left(NULL), right(NULL), red(0) {}
+			node( node * par, bool sid ) : parent(par), left(NULL), right(NULL), side(sid) {}
 
 			//Node constructor; create a node and give it a value
-			node( node * par, const value_type& val ) : parent(par), left(new node(this)), right(new node(this)), red(0) {}
+			node( node * par, const value_type& val, bool sid ) : parent(par), left(new node(this), 0), right(new node(this), 1), side(sid) {}
 
 			// Copy constructor
-			node( const node & ref ) : parent(ref.parent), left(ref.left), right(ref.right), red(ref.red) {}
+			node( const node & ref ) : parent(ref.parent), left(ref.left), right(ref.right), side(ref.side) {}
 
 //---------- Destructor ----------//
 
@@ -59,15 +59,15 @@ namespace ft
 			}
 
 			//set the left or right child to child //POTENTIALLY USELESS
-			void	set_child( node * child, int side )
+			void	set_child( node * child, int sid )
 			{
-				if (!side)
+				if (!sid)
 				{
 					if (!this->left.leaf())
 						delete this->left;
 					this->left = child;
 				}
-				else if (side == 1)
+				else if (sid == 1)
 				{
 					if (!this->right.leaf())
 						delete this->right;
@@ -80,8 +80,8 @@ namespace ft
 			{
 				if (this->leaf())
 				{
-					this->left = new node(this);
-					this->right = new node(this);
+					this->left = new node(this, 0);
+					this->right = new node(this, 1);
 					this->data = val;
 				}
 			}
@@ -104,11 +104,11 @@ namespace ft
 					this->leaf_to_node(val, alloc);
 				else if (this->comp(this->data.first, val.first))
 				{
-					this->right->insert(val, alloc );
+					this->right->insert(val, alloc);
 				}
 				else if (this->comp(val.first, this->data.first))
 				{
-					this->left->insert(val, alloc );
+					this->left->insert(val, alloc);
 				}
 			}
 	};

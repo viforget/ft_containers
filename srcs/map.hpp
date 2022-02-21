@@ -42,7 +42,7 @@ namespace	ft
 			//Basic constructor; create an empty binary tree (only a leaf)
 			explicit map (const key_compare& comp = key_compare(),
             	 const allocator_type& alloc = allocator_type())
-				 : _root(new node<key_type, mapped_type>(NULL)), _comp(comp) {}
+				 : _root(new node<key_type, mapped_type>), _comp(comp) {}
 
 			
 			// template <class InputIterator>
