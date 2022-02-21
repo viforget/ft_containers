@@ -29,9 +29,9 @@ namespace	ft
 			this->_node = ref._node;
 		}
 	
-		T&		operator*() const
+		pair<const Key, T>&	operator*() const
 		{
-			return (this->_node->data->second);
+			return (this->_node->data);
 		}
 
 		// Operator ++ : First check if the current node has a right child, in wich case it will retrun the leftest descendant of the right child
@@ -75,6 +75,7 @@ namespace	ft
 		}
 
 		// Operator-- : the oposite algorithm of the operator++
+		//		left become right and right become left
 
 		map_iterator &	operator--()
 		{
@@ -111,6 +112,11 @@ namespace	ft
 			--*this;
 			return (tmp);
 		}
+
+		bool	operator==(const map_iterator ref) const {return (this->_node == ref._node);}
+		bool	operator!=(const map_iterator ref) const {return (this->_node != ref._node);}
+		pair<const Key, T>*	operator->() const { return (&(this->node->value));}
+
 	};
 	
 }
