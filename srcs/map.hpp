@@ -3,6 +3,8 @@
 
 # include "map_utils.hpp"
 # include "binary_tree.hpp"
+# include "map_iterator.hpp"
+
 # include <functional>
 
 #include <iostream>
@@ -79,14 +81,57 @@ namespace	ft
 				return (iterator(n));
 			}
 
-			const_iterator begin() const;
+			const_iterator begin() const
+			{
+				node<Key, int>*	n = this->_root;
+
+				while(!n->left->leaf())
+					n = n->left;
+				return (const_iterator(n));
+			}
+
+			iterator end()
+			{
+				node<Key, int>*	n = this->_root;
+
+				while(!n->right->leaf())
+					n = n->right;
+				return (iterator(n));
+			}
+
+			const_iterator end() const
+			{
+				node<Key, int>*	n = this->_root;
+
+				while(!n->right->leaf())
+					n = n->right;
+				return (const_iterator(n));
+			}
+
+//---------- Capacity ----------//
+
+			bool empty() const
+			{
+				return (this->_root->leaf());
+			}
+
+			size_type size() const
+			{
+				if (this->_root->leaf())
+					return (0);
+				return (this->_root->size());
+			}
+
+			size_type max_size() const
+			{
+				return(this->alloc.max_size());
+			}
 
 //---------- Modifiers ----------//
 
-			//pair<iterator,bool>
-			void insert (const value_type& val)
+			pair<iterator,bool> insert (const value_type& val)
 			{
-				this->_root->insert(val, this->_alloc);
+				return (this->_root->insert(val, this->_alloc));
 			}
 
 	};

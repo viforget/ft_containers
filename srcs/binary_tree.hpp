@@ -5,18 +5,26 @@
 # include <stdexcept>
 # include <exception>
 # include <functional>
-#include "map_utils.hpp"
+
+# include "map_utils.hpp"
+// # include "map_iterator.hpp"
 
 # define L 0
 # define R 1
 
 namespace ft
 {
+
+	template <class T>class map_iterator;
+
 	template<class Key, class T, class Compare = std::less<Key>,
 		class Alloc = std::allocator<pair<const Key,T> >  >
 	struct node
 	{
 		public:
+			typedef typename ft::map_iterator<pair< const Key, T> >	iterator;
+			typedef ft::pair<const Key, T>							value_type;
+			
 			node*					parent;
 			node*					left;
 			node*					right;
@@ -24,7 +32,6 @@ namespace ft
 			Compare					comp;
 			bool					side;
 
-			typedef	ft::pair<const Key, T>	value_type;
 //---------- Constructors ----------//
 
 			// Basic constructor; create the first node of a binary tree, no parent and both child as NULL
@@ -34,7 +41,7 @@ namespace ft
 			node( node * par, bool sid ) : parent(par), left(NULL), right(NULL), side(sid) {}
 
 			//Node constructor; create a node and give it a value
-			node( node * par, const value_type& val, bool sid ) : parent(par), left(new node(this), L), right(new node(this), R), side(sid) {}
+			// node( node * par, const value_type& val, bool sid ) : parent(par), left(new node(this), L), right(new node(this), R), side(sid) {}
 
 			// Copy constructor
 			node( const node & ref ) : parent(ref.parent), left(ref.left), right(ref.right), side(ref.side) {}
@@ -88,6 +95,7 @@ namespace ft
 					this->left = new node(this, L);
 					this->right = new node(this, R);
 					// this->data = val;
+					alloc.construct(this->data, val);
 					this->data = new value_type(val);
 				}
 			}
@@ -104,18 +112,31 @@ namespace ft
 			}
 
 			//recursive function that insert a new element
-			void	insert(const value_type& val, Alloc alloc=std::allocator<pair<const Key,T> >())
+			pair<iterator,bool>	insert(const value_type& val, Alloc alloc=std::allocator<pair<const Key,T> >())
 			{
 				if (this->leaf())
+				{
 					this->leaf_to_node(val, alloc);
+					return (pair<iterator,bool>(iterator(this), true));
+				}
 				else if (this->comp(this->data->first, val.first))
 				{
-					this->right->insert(val, alloc);
+					return (this->right->insert(val, alloc));
 				}
 				else if (this->comp(val.first, this->data->first))
 				{
-					this->left->insert(val, alloc);
+					return (this->left->insert(val, alloc));
 				}
+				else
+					return (pair<iterator, bool>(iterator(this), false));
+			}
+
+			//recursive function that count de number of non-leaf nodes
+			size_t	size()
+			{
+				if (this->leaf())
+					return (0);
+				return(this->left->size() + this->right->size() + 1);
 			}
 	};
 }

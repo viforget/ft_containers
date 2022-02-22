@@ -1,25 +1,30 @@
 #ifndef MAP_ITERATOR_HPP
 # define MAP_ITERATOR_HPP
 
-# include "map_utils.hpp"
 # include "binary_tree.hpp"
+# include "map_utils.hpp"
+# include "utils.hpp"
 
 namespace	ft
 {
+	// template<class Key, class T, class Compare = std::less<Key>,
+	// 	class Alloc
+	//struct node;
+
 	template <class T>
 	class map_iterator
 	{
 	private:
-		node<typename T::first_type, typename T::second_type	>	*_node;
+		typedef node<typename remove_const<typename T::first_type>::type, typename T::second_type> node_type;
+		node_type													*_node;
 	public:
 		typedef	typename T::first_type				key_type;
 		typedef	typename T::second_type				mapped_type;
-		typedef node<key_type, mapped_type>			node_type;
 //---------- Constructors ----------//
 
 		map_iterator() : _node(NULL) {};
 		map_iterator( const map_iterator & ref) : _node(ref._node) {};
-		map_iterator( node_type * n) : _node(n) {};
+		map_iterator( node_type * n ) : _node(n) {};
 
 //---------- Destructor ----------//
 
@@ -118,7 +123,7 @@ namespace	ft
 
 		bool	operator==(const map_iterator ref) const {return (this->_node == ref._node);}
 		bool	operator!=(const map_iterator ref) const {return (this->_node != ref._node);}
-		T*	operator->() const { return (&(this->node->value));}
+		T*		operator->() const { return (&(this->node->value));}
 
 	};
 	
