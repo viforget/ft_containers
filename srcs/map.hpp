@@ -74,7 +74,7 @@ namespace	ft
 
 			iterator begin()
 			{
-				node<Key, int>*	n = this->_root;
+				node<Key, T>*	n = this->_root;
 
 				while(!n->left->leaf())
 					n = n->left;
@@ -83,7 +83,7 @@ namespace	ft
 
 			const_iterator begin() const
 			{
-				node<Key, int>*	n = this->_root;
+				node<Key, T>*	n = this->_root;
 
 				while(!n->left->leaf())
 					n = n->left;
@@ -92,7 +92,7 @@ namespace	ft
 
 			iterator end()
 			{
-				node<Key, int>*	n = this->_root;
+				node<Key, T>*	n = this->_root;
 
 				while(!n->right->leaf())
 					n = n->right;
@@ -101,7 +101,7 @@ namespace	ft
 
 			const_iterator end() const
 			{
-				node<Key, int>*	n = this->_root;
+				node<Key, T>*	n = this->_root;
 
 				while(!n->right->leaf())
 					n = n->right;
@@ -127,6 +127,24 @@ namespace	ft
 				return(this->alloc.max_size());
 			}
 
+//---------- Element Acess ----------//
+
+			mapped_type& operator[] (const key_type& k)
+			{
+				node<Key, T> *	n = this->_root;
+
+				while(!n->leaf())
+				{
+					if (this->_comp(n->data->first, k))
+						n = n->left;
+					else if (this->_comp(k, n->data->first))
+						n = n->right;
+					else 
+						return (n->data->first);
+				}
+				n->leaf_to_node(make_pair(k, mapped_type()), k);
+			}
+
 //---------- Modifiers ----------//
 
 			pair<iterator,bool> insert (const value_type& val)
@@ -134,6 +152,60 @@ namespace	ft
 				return (this->_root->insert(val, this->_alloc));
 			}
 
+			iterator insert (iterator position, const value_type& val)
+			{
+				static_cast<void>(position);
+				return (this->_root->insert(val, this->_alloc).first);
+			}
+
+			template <class InputIterator>
+			void insert (InputIterator first, InputIterator last)
+			{
+				while (first != last)
+				{
+					this->_root->insert(*first, this->_alloc);
+					first++;
+				}
+			}
+
+			void erase (iterator position)
+			{
+				this->_root->erase((*position).first);
+			}
+
+			size_type erase (const key_type& k)
+			{
+				return (this->_root->erase(k));
+			}
+
+			void erase (iterator first, iterator last)
+			{
+				while (first != last)
+				{
+					this->erase(first);
+					first++;
+				}
+			}
+
+			void swap (map& x)
+			{
+				node<Key, T> *	tmp_root = this->_root;
+				Alloc			tmp_alloc = this->_alloc;
+				Compare			tmp_comp = this->_comp;
+
+				this->_root = x._root;
+				this->_alloc = x._alloc;
+				this->_comp = x._comp;
+				x._root = tmp_root;
+				x._alloc = tmp_alloc;
+				x._comp = tmp_comp;
+			}
+
+			void clear()
+			{
+				this->_root->delete_tree();
+				this->_root = new node<key_type, mapped_type>;
+			}
 	};
 }
 

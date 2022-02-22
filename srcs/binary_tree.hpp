@@ -138,6 +138,72 @@ namespace ft
 					return (0);
 				return(this->left->size() + this->right->size() + 1);
 			}
+
+			void	insert_node(node * n)
+			{
+				if (this->comp(this->data->first, n->data->first))
+				{
+					if (this->right->leaf())
+					{
+						delete this->right;
+						this->right = n;
+						n->parent = this;
+					}
+					else
+						this->right->insert_node(n);
+				}
+				else if (this->comp(n->data->first, this->data->first))
+				{
+					if (this->left->leaf())
+					{
+						delete this->left;
+						this->left = n;
+						n->parent = this;
+					}
+					else
+						this->left->insert_node(n);
+				}
+			}
+
+
+			//Erase the node with de data with the key k. set his longest child at his place and insert is shortest child in the longest one
+			size_t	erase(Key k)
+			{
+				if (this->leaf())
+					return(0);
+				else if (this->comp(this->data->first, k))
+				{
+					return (this->right->erase(k));
+				}
+				else if (this->comp(k, this->data->first))
+				{
+					return (this->left->erase(k));
+				}
+				else
+				{
+					if (this->left->size() > this->right->size())
+					{
+						this->left->parent = this->parent;
+						if (this->parent && this->side == R)
+							this->parent->right = this->left;
+						else if (this->parent && this->side == L)
+							this->parent->left = this->left;
+						this->left->insert_node(this->right);
+					}
+					else
+					{
+						this->right->parent = this->parent;
+						if (this->parent && this->side == R)
+							this->parent->right = this->right;
+						else if (this->parent && this->side == L)
+							this->parent->left = this->right;
+						this->left->insert_node(this->left);
+					}
+					delete this;
+					return (1);
+				}
+
+			}
 	};
 }
 
