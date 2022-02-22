@@ -206,6 +206,174 @@ namespace	ft
 				this->_root->delete_tree();
 				this->_root = new node<key_type, mapped_type>;
 			}
+
+//---------- Observers ----------//
+
+			// Returns a copy of the comparison object used by the container to compare keys
+			key_compare key_comp() const
+			{
+				return (this->_comp);
+			}
+
+			value_compare value_comp() const;
+
+//---------- Operations ----------//
+			
+			iterator find (const key_type& k)
+			{
+				node<Key, T> *	n = this->_root;
+				
+				while(!n->leaf())
+				{
+					if (this->_comp(n->data->first, k))
+						n = n->left;
+					else if (this->_comp(k, n->data->first))
+						n = n->right;
+					else 
+						return (iterator(n));
+				}
+				return (this->end());
+			}
+
+			const_iterator find (const key_type& k) const
+			{
+				node<Key, T> *	n = this->_root;
+				
+				while(!n->leaf())
+				{
+					if (this->_comp(n->data->first, k))
+						n = n->left;
+					else if (this->_comp(k, n->data->first))
+						n = n->right;
+					else 
+						return (const_iterator(n));
+				}
+				return (this->end());
+			}
+
+			size_type count (const key_type& k) const
+			{
+				node<Key, T> *	n = this->_root;
+				
+				while(!n->leaf())
+				{
+					if (this->_comp(n->data->first, k))
+						n = n->left;
+					else if (this->_comp(k, n->data->first))
+						n = n->right;
+					else 
+						return (1);
+				}
+				return (0);
+			}
+
+			iterator lower_bound (const key_type& k)
+			{
+				iterator it = this->begin();
+				iterator end = this->end();
+
+				while (it != end)
+				{
+					if (!(this->_comp(n->data->first, k)))
+						return (it);
+					it++;
+				}
+				return (end);
+			}
+
+			const_iterator lower_bound (const key_type& k) const
+			{
+				const_iterator it = this->begin();
+				const_iterator end = this->end();
+
+				while (it != end)
+				{
+					if (!(this->_comp(n->data->first, k)))
+						return (it);
+					it++;
+				}
+				return (end);
+			}
+
+			iterator upper_bound (const key_type& k)
+			{
+				iterator it = this->begin();
+				iterator end = this->end();
+
+				while (it != end)
+				{
+					if ((this->_comp(k, n->data->first)))
+						return (it);
+					it++;
+				}
+				return (end);
+			}
+
+			const_iterator upper_bound (const key_type& k) const
+			{
+				const_iterator it = this->begin();
+				const_iterator end = this->end();
+
+				while (it != end)
+				{
+					if ((this->_comp(k, n->data->first)))
+						return (it);
+					it++;
+				}
+				return (end);
+			}
+
+			pair<iterator,iterator>             equal_range (const key_type& k);
+			{
+				node<Key, T> *	n = this->_root;
+				node<Key, T> *	n2 = n;
+				
+				while(!n->leaf())
+				{
+					if (this->_comp(n->data->first, k))
+						n = n->left;
+					else if (this->_comp(k, n->data->first))
+						n = n->right;
+					else 
+					{
+						n2 = n;
+						n2++;
+						return (pair<iterator,iterator>(iterator(n), iterator(n2)));
+					}
+				}
+				n2 = this->end()
+				return (pair<iterator,iterator>(iterator(n2), iterator(n2)));
+			}
+
+			pair<const_iterator,const_iterator> equal_range (const key_type& k) const
+			{
+				node<Key, T> *	n = this->_root;
+				node<Key, T> *	n2 = n;
+				
+				while(!n->leaf())
+				{
+					if (this->_comp(n->data->first, k))
+						n = n->left;
+					else if (this->_comp(k, n->data->first))
+						n = n->right;
+					else 
+					{
+						n2 = n;
+						n2++;
+						return (pair<iterator,iterator>(iterator(n), iterator(n2)));
+					}
+				}
+				n2 = this->end()
+				return (pair<const_iterator, const_iterator>(const_iterator(n2), const_iterator(n2)));
+			}
+
+//---------- Allocator ----------//
+
+			allocator_type get_allocator() const;
+			{
+				return (this->_alloc);
+			}
+
 	};
 }
 
