@@ -44,13 +44,17 @@ namespace	ft
 			//Basic constructor; create an empty binary tree (only a leaf)
 			explicit map (const key_compare& comp = key_compare(),
             	 const allocator_type& alloc = allocator_type())
-				 : _root(new node<key_type, mapped_type>), _comp(comp) {}
+				 : _root(new node<key_type, mapped_type>), _comp(comp), _alloc(alloc) {}
 
 			
-			// template <class InputIterator>
-			// map (InputIterator first, InputIterator last,
-			// 		const key_compare& comp = key_compare(),
-			// 		const allocator_type& alloc = allocator_type());
+			template <class InputIterator>
+			map (InputIterator first, InputIterator last,
+			 		const key_compare& comp = key_compare(),
+			 		const allocator_type& alloc = allocator_type())
+					:  _root(new node<key_type, mapped_type>), _comp(comp), _alloc(alloc)
+			{
+				this->insert(first, last);
+			}
 
 			//Third constructor; take an other map
 			//Create a deep copy of the first map
@@ -67,7 +71,7 @@ namespace	ft
 
 			map& operator= (const map& x)
 			{
-				
+				this->clear();
 			}
 
 //---------- Iterators ----------//
