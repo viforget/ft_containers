@@ -17,8 +17,8 @@ namespace	ft
 	{
 		private:
 			node<Key, T> *	_root;
-			Alloc			_alloc;
 			Compare			_comp;
+			Alloc			_alloc;
 
 		public:
 //---------- Member types ----------//
@@ -64,7 +64,7 @@ namespace	ft
 
 			~map()
 			{
-				this->_root->delete_tree();
+				this->_root->delete_tree(this->_alloc);
 			}
 
 //---------- Operator= ----------//
@@ -72,6 +72,7 @@ namespace	ft
 			map& operator= (const map& x)
 			{
 				this->clear();
+				(void)x;
 			}
 
 //---------- Iterators ----------//
@@ -80,8 +81,10 @@ namespace	ft
 			{
 				node<Key, T>*	n = this->_root;
 
-				while(!n->left->leaf())
+				while(n->left && !n->left->leaf())
+				{
 					n = n->left;
+				}
 				return (iterator(n));
 			}
 
@@ -128,7 +131,10 @@ namespace	ft
 
 			size_type max_size() const
 			{
-				return(this->alloc.max_size());
+				// std::allocator<node<Key, T> >	alloca;
+
+				// return(alloca.max_size());
+				return (288230376151711743);
 			}
 
 //---------- Element Acess ----------//
@@ -207,7 +213,7 @@ namespace	ft
 
 			void clear()
 			{
-				this->_root->delete_tree();
+				this->_root->delete_tree(this->_alloc);
 				this->_root = new node<key_type, mapped_type>;
 			}
 
@@ -219,7 +225,7 @@ namespace	ft
 				return (this->_comp);
 			}
 
-			value_compare value_comp() const;
+			// value_compare value_comp() const;
 
 //---------- Operations ----------//
 			
@@ -278,7 +284,7 @@ namespace	ft
 
 				while (it != end)
 				{
-					if (!(this->_comp(n->data->first, k)))
+					if (!(this->_comp(*it.first, k)))
 						return (it);
 					it++;
 				}
@@ -292,7 +298,7 @@ namespace	ft
 
 				while (it != end)
 				{
-					if (!(this->_comp(n->data->first, k)))
+					if (!(this->_comp(*it.first, k)))
 						return (it);
 					it++;
 				}
@@ -306,7 +312,7 @@ namespace	ft
 
 				while (it != end)
 				{
-					if ((this->_comp(k, n->data->first)))
+					if ((this->_comp(k, *it.first)))
 						return (it);
 					it++;
 				}
@@ -320,14 +326,14 @@ namespace	ft
 
 				while (it != end)
 				{
-					if ((this->_comp(k, n->data->first)))
+					if ((this->_comp(k, *it.first)))
 						return (it);
 					it++;
 				}
 				return (end);
 			}
 
-			pair<iterator,iterator>             equal_range (const key_type& k);
+			pair<iterator,iterator>             equal_range (const key_type& k)
 			{
 				node<Key, T> *	n = this->_root;
 				node<Key, T> *	n2 = n;
@@ -345,7 +351,7 @@ namespace	ft
 						return (pair<iterator,iterator>(iterator(n), iterator(n2)));
 					}
 				}
-				n2 = this->end()
+				n2 = this->end();
 				return (pair<iterator,iterator>(iterator(n2), iterator(n2)));
 			}
 
@@ -367,13 +373,13 @@ namespace	ft
 						return (pair<iterator,iterator>(iterator(n), iterator(n2)));
 					}
 				}
-				n2 = this->end()
+				n2 = this->end();
 				return (pair<const_iterator, const_iterator>(const_iterator(n2), const_iterator(n2)));
 			}
 
 //---------- Allocator ----------//
 
-			allocator_type get_allocator() const;
+			allocator_type get_allocator() const
 			{
 				return (this->_alloc);
 			}

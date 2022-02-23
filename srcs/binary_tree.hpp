@@ -35,23 +35,28 @@ namespace ft
 //---------- Constructors ----------//
 
 			// Basic constructor; create the first node of a binary tree, no parent and both child as NULL
-			node() : parent(NULL), left(NULL), right(NULL), side(-1) {}
+			node() : parent(NULL), left(NULL), right(NULL), data(NULL), side(-1) {}
 
 			// Leaf constructor; create a node with a parent but both child as NULL, no leaf node cannot have NULL as child
-			node( node * par, bool sid ) : parent(par), left(NULL), right(NULL), side(sid) {}
+			node( node * par, bool sid ) : parent(par), left(NULL), right(NULL), data(NULL), side(sid) {}
 
 			//Node constructor; create a node and give it a value
 			// node( node * par, const value_type& val, bool sid ) : parent(par), left(new node(this), L), right(new node(this), R), side(sid) {}
 
 			// Copy constructor
-			node( const node & ref ) : parent(ref.parent), left(ref.left), right(ref.right), side(ref.side) {}
+			node( const node & ref ) : parent(ref.parent), left(ref.left), right(ref.right), data(ref.data), side(ref.side) {}
 
 //---------- Destructor ----------//
 
 			~node()
 			{
-				if (data)
-					delete data;
+				std::allocator<pair<const Key,T> >	alloc;
+
+				if (this->data)
+				{
+					alloc.destroy(this->data);
+					alloc.deallocate(data, 1);
+				}
 			}
 
 //---------- Member functions ----------//
@@ -90,25 +95,39 @@ namespace ft
 			//transform the leaf into a node with a data and 2 leaves
 			void	leaf_to_node( const value_type& val, Alloc alloc )
 			{
+				std::allocator<node>	alloca;
+				
 				if (this->leaf())
 				{
-					this->left = new node(this, L);
-					this->right = new node(this, R);
-					// this->data = val;
+					this->left = alloca.allocate(1);
+					alloca.construct(this->left, node(this, L));
+
+					this->right = alloca.allocate(1);
+					alloca.construct(this->right, node(this, R));
+					this->data = alloc.allocate(1);
 					alloc.construct(this->data, val);
-					this->data = new value_type(val);
 				}
 			}
 
 			//delete and free every nodes of the tree
-			void	delete_tree()
+			void	delete_tree( Alloc alloc )
 			{
+				std::allocator<node>	alloca;
+
 				if (!this->leaf())
 				{
-					this->left->delete_tree();
-					this->right->delete_tree();
+					this->left->delete_tree(alloc);
+					this->right->delete_tree(alloc);
 				}
-				delete this;
+				// if (this->data)
+				// {
+				// 	alloc.destroy(this->data);
+				// 	alloc.deallocate(this->data, 1);
+				// }
+				// std::cout << this->data->second << std::endl << std::endl;
+				alloca.destroy(this);
+				alloca.deallocate(this, 1);
+				//delete this;
 			}
 
 			//recursive function that insert a new element

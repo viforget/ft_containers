@@ -123,7 +123,7 @@ namespace	ft
 
 		bool	operator==(const map_iterator ref) const {return (this->_node == ref._node);}
 		bool	operator!=(const map_iterator ref) const {return (this->_node != ref._node);}
-		T*		operator->() const { return (&(this->node->value));}
+		T*		operator->() const { return ((this->_node->data));}
 
 	};
 	
