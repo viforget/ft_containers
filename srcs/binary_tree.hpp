@@ -190,6 +190,8 @@ namespace ft
 			//Erase the node with de data with the key k. set his longest child at his place and insert is shortest child in the longest one
 			size_t	erase(Key k)
 			{
+				std::allocator<node>	alloc;
+
 				if (this->leaf())
 					return(0);
 				else if (this->comp(this->data->first, k))
@@ -209,8 +211,7 @@ namespace ft
 							this->parent->right = this->left;
 						else if (this->parent && this->side == L)
 							this->parent->left = this->left;
-						else 
-							
+						//else
 						this->left->insert_node(this->right);
 					}
 					else
@@ -222,7 +223,8 @@ namespace ft
 							this->parent->left = this->right;
 						this->left->insert_node(this->left);
 					}
-					delete this;
+					alloc.destroy(this);
+					alloc.deallocate(this, 1);
 					return (1);
 				}
 
