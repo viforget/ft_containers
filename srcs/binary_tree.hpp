@@ -160,6 +160,8 @@ namespace ft
 
 			void	insert_node(node * n)
 			{
+				if (!this->data)
+					return ;
 				if (this->comp(this->data->first, n->data->first))
 				{
 					if (this->right->leaf())
@@ -207,6 +209,8 @@ namespace ft
 							this->parent->right = this->left;
 						else if (this->parent && this->side == L)
 							this->parent->left = this->left;
+						else 
+							
 						this->left->insert_node(this->right);
 					}
 					else

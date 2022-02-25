@@ -34,7 +34,7 @@ namespace	ft
 			typedef	typename allocator_type::pointer			pointer;
 			typedef	typename allocator_type::const_pointer		const_pointer;
 			typedef	ft::map_iterator<pair<const Key, T> >		iterator;
-			typedef	ft::map_iterator<pair<const Key, T> >		const_iterator;
+			typedef	ft::map_iterator<const pair<const Key, T> >	const_iterator;
 			// typedef	reverse_iterator;
 			// typedef	const_reverse_iterator;
 			typedef	size_t								size_type;
@@ -101,7 +101,7 @@ namespace	ft
 			{
 				node<Key, T>*	n = this->_root;
 
-				while(!n->right->leaf())
+				while(n->right)
 					n = n->right;
 				return (iterator(n));
 			}
@@ -110,7 +110,7 @@ namespace	ft
 			{
 				node<Key, T>*	n = this->_root;
 
-				while(!n->right->leaf())
+				while(n->right)
 					n = n->right;
 				return (const_iterator(n));
 			}
@@ -131,10 +131,10 @@ namespace	ft
 
 			size_type max_size() const
 			{
-				// std::allocator<node<Key, T> >	alloca;
+				std::allocator<node<Key, T> >	alloca;
 
-				// return(alloca.max_size());
-				return (288230376151711743);
+				return(alloca.max_size());
+				// return (288230376151711743);
 			}
 
 //---------- Element Acess ----------//
@@ -150,9 +150,10 @@ namespace	ft
 					else if (this->_comp(k, n->data->first))
 						n = n->right;
 					else 
-						return (n->data->first);
+						return (n->data->second);
 				}
-				n->leaf_to_node(make_pair(k, mapped_type()), k);
+				n->leaf_to_node(pair<key_type, mapped_type>(k, mapped_type()), this->_alloc);
+				return (n->data->second);
 			}
 
 //---------- Modifiers ----------//
