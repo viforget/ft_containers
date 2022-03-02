@@ -44,7 +44,13 @@ namespace	ft
 			//Basic constructor; create an empty binary tree (only a leaf)
 			explicit map (const key_compare& comp = key_compare(),
             	 const allocator_type& alloc = allocator_type())
-				 : _root(new node<key_type, mapped_type>), _comp(comp), _alloc(alloc) {}
+				 : _root(new node<key_type, mapped_type>), _comp(comp), _alloc(alloc)
+			{
+				std::allocator<node<key_type, mapped_type> >	alloca;
+
+				this->_root = alloca.allocate(1);
+				alloca.construct(this, node<key_type, mapped_type>())
+			}
 
 			
 			template <class InputIterator>
@@ -71,8 +77,10 @@ namespace	ft
 
 			map& operator= (const map& x)
 			{
+				std::allocator<pair<const Key,T> >	alloc;
+
 				this->clear();
-				(void)x;
+				this->_node = x._node;
 			}
 
 //---------- Iterators ----------//
@@ -285,7 +293,7 @@ namespace	ft
 
 				while (it != end)
 				{
-					if (!(this->_comp(*it.first, k)))
+					if (!(this->_comp((*it).first, k)))
 						return (it);
 					it++;
 				}
@@ -299,7 +307,7 @@ namespace	ft
 
 				while (it != end)
 				{
-					if (!(this->_comp(*it.first, k)))
+					if (!(this->_comp((*it).first, k)))
 						return (it);
 					it++;
 				}
@@ -313,7 +321,7 @@ namespace	ft
 
 				while (it != end)
 				{
-					if ((this->_comp(k, *it.first)))
+					if ((this->_comp(k, (*it).first)))
 						return (it);
 					it++;
 				}
@@ -327,7 +335,7 @@ namespace	ft
 
 				while (it != end)
 				{
-					if ((this->_comp(k, *it.first)))
+					if ((this->_comp(k, (*it).first)))
 						return (it);
 					it++;
 				}
@@ -352,7 +360,7 @@ namespace	ft
 						return (pair<iterator,iterator>(iterator(n), iterator(n2)));
 					}
 				}
-				n2 = this->end();
+				n2 = this->end().get_node();
 				return (pair<iterator,iterator>(iterator(n2), iterator(n2)));
 			}
 
@@ -374,7 +382,7 @@ namespace	ft
 						return (pair<iterator,iterator>(iterator(n), iterator(n2)));
 					}
 				}
-				n2 = this->end();
+				n2 = this->end().get_node();
 				return (pair<const_iterator, const_iterator>(const_iterator(n2), const_iterator(n2)));
 			}
 

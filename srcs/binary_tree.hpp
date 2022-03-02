@@ -44,7 +44,13 @@ namespace ft
 			// node( node * par, const value_type& val, bool sid ) : parent(par), left(new node(this), L), right(new node(this), R), side(sid) {}
 
 			// Copy constructor
-			node( const node & ref ) : parent(ref.parent), left(ref.left), right(ref.right), data(ref.data), side(ref.side) {}
+			node( const node & ref ) : parent(ref.parent), left(ref.left), right(ref.right), side(ref.side)
+			{
+				std::allocator<pair<const Key,T> >	alloc;
+
+				this->data = alloc.allocate(1);
+				alloc.construct(this->data, *(x.data));
+			}
 
 //---------- Destructor ----------//
 
@@ -58,6 +64,25 @@ namespace ft
 					alloc.deallocate(data, 1);
 				}
 			}
+
+//---------- Operator= ----------//
+
+			node& operator= (const node& x)
+			{
+				std::allocator<pair<const Key,T> >	alloc;
+
+				this->parent = x.parent;
+				this->left = x.left;
+				this->right = x.right;
+				this->side = x.side;
+				this->comp = x.comp;
+				if (this->data)
+					alloc.destroy(this->data);
+				else
+					this->data = alloc.allocate(1);
+				alloc.construct(this->data, *(x.data));
+			}
+
 
 //---------- Member functions ----------//
 			
