@@ -140,7 +140,8 @@ namespace	ft
 			bool				operator==(random_iterator const & ref) {return ((this->_pointer) == (ref._pointer));}
 			bool				operator!=(random_iterator const & ref) {return ((this->_pointer) != (ref._pointer));}
 			
-			friend random_iterator operator-(random_iterator const & a, random_iterator const & b);
+			template < class T2 >
+			friend random_iterator operator-(random_iterator<T2> const & a, random_iterator<T2> const & b);
 			friend bool	operator<(random_iterator const & a, random_iterator const & ref) {return ((a._pointer) < (ref._pointer));}
 			friend bool	operator<=(random_iterator const & a, random_iterator const & ref) {return ((a._pointer) <= (ref._pointer));}
 			friend bool	operator>(random_iterator const & a, random_iterator const & ref) {return ((a._pointer) > (ref._pointer));}
