@@ -12,6 +12,9 @@ namespace	ft
 			typedef T1	first_type;	
 			typedef T2	second_type;
 			
+			first_type	first;
+			second_type	second;
+			
 			pair ()
 			: first(first_type()), second(second_type()) {}
 			
@@ -21,14 +24,12 @@ namespace	ft
 			pair (const first_type& a, const second_type& b)
 			: first(a), second(b) {}
 
-			void operator=( const pair & ref)
+			pair & operator=( const pair & ref)
 			{
 				this->first = ref.first;
 				this->second = ref.second;
+				return (*this);
 			}
-			
-			first_type	first;
-			second_type	second;
 	};
 
 	template <class T1, class T2>
@@ -36,6 +37,52 @@ namespace	ft
 	{
 		return (pair<T1, T2>(x, y));
 	}
+
+	template <class T1, class T2>
+	bool operator== (const pair<T1,T2>& lhs, const pair<T1,T2>& rhs)
+	{
+		return lhs.first==rhs.first && lhs.second==rhs.second;
+	}
+
+	template <class T1, class T2>
+	bool operator!= (const pair<T1,T2>& lhs, const pair<T1,T2>& rhs)
+	{
+		return !(lhs==rhs);
+	}
+
+	template <class T1, class T2>
+	bool operator<  (const pair<T1,T2>& lhs, const pair<T1,T2>& rhs)
+	{
+		return lhs.first<rhs.first || (!(rhs.first<lhs.first) && lhs.second<rhs.second);
+	}
+
+	template <class T1, class T2>
+	bool operator<= (const pair<T1,T2>& lhs, const pair<T1,T2>& rhs)
+	{
+		return (!(rhs < lhs));
+	}
+
+	template <class T1, class T2>
+	bool operator>  (const pair<T1,T2>& lhs, const pair<T1,T2>& rhs)
+	{
+		return (rhs < lhs);
+	}
+
+	template <class T1, class T2>
+	bool operator>= (const pair<T1,T2>& lhs, const pair<T1,T2>& rhs)
+	{
+		return !(lhs<rhs);
+	}
+
+	template<class Category, class T, class Distance = std::ptrdiff_t, class Pointer = T*, class Reference = T&>
+	struct iterator
+	{
+		typedef Category	iterator_category;
+		typedef T			value_type;
+		typedef Distance	difference_type;
+		typedef Pointer		pointer;
+		typedef Reference	reference;
+	};
 }
 
 #endif

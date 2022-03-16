@@ -3,8 +3,8 @@
 
 # include <iostream>
 # include <memory>
-# include "vector.hpp"
-# include "iterator.hpp"
+//# include "vector.hpp"
+//# include "iterator.hpp"
 # include "utils.hpp"
 
 namespace	ft
@@ -112,7 +112,7 @@ namespace	ft
 			return(*this);
 		}
 
-		pointer				operator->( void )
+		pointer				operator->( void ) const
 		{
 			return &(this->operator*());
 		}

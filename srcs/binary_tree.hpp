@@ -49,7 +49,10 @@ namespace ft
 				std::allocator<pair<const Key,T> >	alloc;
 
 				this->data = alloc.allocate(1);
-				alloc.construct(this->data, *(x.data));
+				if (ref.data)
+					alloc.construct(this->data, *(ref.data));
+				else
+					this->data = NULL;
 			}
 
 //---------- Destructor ----------//
@@ -89,6 +92,9 @@ namespace ft
 			//Check if the node is a leaf
 			bool	leaf()
 			{
+				//std::cout << this << std::endl;
+				if (static_cast<void *>(this) == NULL)
+					return (true);
 				switch ((this->left != NULL) + (this->right != NULL))
 				{
 					case (0) :
@@ -121,12 +127,11 @@ namespace ft
 			void	leaf_to_node( const value_type& val, Alloc alloc )
 			{
 				std::allocator<node>	alloca;
-				
+			
 				if (this->leaf())
 				{
 					this->left = alloca.allocate(1);
 					alloca.construct(this->left, node(this, L));
-
 					this->right = alloca.allocate(1);
 					alloca.construct(this->right, node(this, R));
 					this->data = alloc.allocate(1);
@@ -134,11 +139,30 @@ namespace ft
 				}
 			}
 
+			void	node_to_leaf( Alloc alloc=std::allocator<pair<const Key,T> >() )
+			{
+				std::allocator<node>	alloca;
+			
+				if (this->leaf())
+				{
+					alloca.destroy(this->left);
+					alloca.deallocate(this->left, 1);
+					alloca.destroy(this->right);
+					alloca.deallocate(this->right, 1);
+					alloc.destroy(this->data);
+					alloc.deallocate(this->data, 1);
+					this->data = NULL;
+					this->left = NULL;
+					this->right = NULL;
+				}
+			}
+
 			//delete and free every nodes of the tree
 			void	delete_tree( Alloc alloc )
 			{
 				std::allocator<node>	alloca;
-
+				
+				//std::cout << "A" << std::endl;
 				if (!this->leaf())
 				{
 					this->left->delete_tree(alloc);
@@ -152,7 +176,6 @@ namespace ft
 				// std::cout << this->data->second << std::endl << std::endl;
 				alloca.destroy(this);
 				alloca.deallocate(this, 1);
-				//delete this;
 			}
 
 			//recursive function that insert a new element
@@ -229,27 +252,31 @@ namespace ft
 				}
 				else
 				{
+					node					*nd = this;
+					ft::pair<const Key, T>	*tmp;
+
 					if (this->left->size() > this->right->size())
 					{
-						this->left->parent = this->parent;
-						if (this->parent && this->side == R)
-							this->parent->right = this->left;
-						else if (this->parent && this->side == L)
-							this->parent->left = this->left;
-						//else
-						this->left->insert_node(this->right);
+						while(!nd->left->leaf())
+							nd = nd->left;
+						tmp = this->data;
+						this->data = nd->data;
+						nd->data = tmp;
+						if (nd->parent)
+							nd->parent->left->node_to_leaf();
 					}
 					else
 					{
-						this->right->parent = this->parent;
-						if (this->parent && this->side == R)
-							this->parent->right = this->right;
-						else if (this->parent && this->side == L)
-							this->parent->left = this->right;
-						this->left->insert_node(this->left);
+						while(!nd->right->leaf())
+							nd = nd->right;
+						tmp = this->data;
+						this->data = nd->data;
+						nd->data = tmp;
+						if (nd->parent)
+							nd->parent->right->node_to_leaf();
 					}
-					alloc.destroy(this);
-					alloc.deallocate(this, 1);
+					//alloc.destroy(this);
+					//alloc.deallocate(this, 1);
 					return (1);
 				}
 

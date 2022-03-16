@@ -20,6 +20,11 @@ namespace	ft
 	public:
 		typedef	typename T::first_type				key_type;
 		typedef	typename T::second_type				mapped_type;
+		typedef typename ft::iterator<map_iterator, T>::iterator_category	iterator_category;
+		typedef typename ft::iterator<map_iterator, T>::value_type			value_type;
+		typedef typename ft::iterator<map_iterator, T>::difference_type		difference_type;
+		typedef typename ft::iterator<map_iterator, T>::pointer				pointer;
+		typedef typename ft::iterator<map_iterator, T>::reference			reference;
 //---------- Constructors ----------//
 
 		map_iterator() : _node(NULL) {};
@@ -149,8 +154,7 @@ namespace	ft
 		bool	operator!=(const map_iterator ref) const {return (this->_node != ref._node);}
 		T*		operator->() const 
 		{
-			// if ((this->_node->data))
-				return ((this->_node->data));
+			return ((this->_node->data));
 		}
 
 	};
