@@ -475,7 +475,9 @@ namespace	ft
 			ite++;
 		}
 		if (*it != *ite)
+		{
 			return (0);
+		}
 		return (1);
 	}
 
