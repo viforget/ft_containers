@@ -209,7 +209,7 @@ namespace	ft
 
 //---------- Modifiers ----------//
 
-			pair<iterator,bool> insert (const value_type& val)
+			pair<iterator, bool> insert (const value_type& val)
 			{
 				return (this->_root->insert(val, this->_alloc));
 			}
@@ -225,7 +225,7 @@ namespace	ft
 			{
 				while (first != last)
 				{
-					this->_root->insert(*first, this->_alloc); // HERE
+					this->_root->insert(*first, this->_alloc);
 					first++;
 				}
 			}
@@ -327,9 +327,9 @@ namespace	ft
 				while(!n->leaf())
 				{
 					if (this->_comp(n->data->first, k))
-						n = n->left;
-					else if (this->_comp(k, n->data->first))
 						n = n->right;
+					else if (this->_comp(k, n->data->first))
+						n = n->left;
 					else 
 						return (const_iterator(n));
 				}
@@ -411,7 +411,7 @@ namespace	ft
 			pair<iterator,iterator>             equal_range (const key_type& k)
 			{
 				node<Key, T> *	n = this->_root;
-				node<Key, T> *	n2 = n;
+				
 				
 				while(!n->leaf())
 				{
@@ -421,19 +421,16 @@ namespace	ft
 						n = n->right;
 					else 
 					{
-						n2 = n;
-						n2++;
-						return (pair<iterator,iterator>(iterator(n), iterator(n2)));
+						return (pair<iterator,iterator>(iterator(n), ++iterator(n)));
 					}
 				}
-				n2 = this->end().get_node();
-				return (pair<iterator,iterator>(iterator(n2), iterator(n2)));
+				return (pair<iterator,iterator>(iterator(this->end()), this->end()));
 			}
 
 			pair<const_iterator,const_iterator> equal_range (const key_type& k) const
 			{
 				node<Key, T> *	n = this->_root;
-				node<Key, T> *	n2 = n;
+				
 				
 				while(!n->leaf())
 				{
@@ -443,13 +440,11 @@ namespace	ft
 						n = n->right;
 					else 
 					{
-						n2 = n;
-						n2++;
-						return (pair<iterator,iterator>(iterator(n), iterator(n2)));
+						
+						return (pair<const_iterator,const_iterator>(const_iterator(n), ++const_iterator(n)));
 					}
 				}
-				n2 = this->end().get_node();
-				return (pair<const_iterator, const_iterator>(const_iterator(n2), const_iterator(n2)));
+				return (pair<const_iterator, const_iterator>(const_iterator(this->end()), this->end()));
 			}
 
 //---------- Allocator ----------//

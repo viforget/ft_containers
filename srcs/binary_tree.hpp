@@ -143,7 +143,7 @@ namespace ft
 			{
 				std::allocator<node>	alloca;
 			
-				if (this->leaf())
+				if (!this->leaf())
 				{
 					alloca.destroy(this->left);
 					alloca.deallocate(this->left, 1);

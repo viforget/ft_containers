@@ -16,8 +16,8 @@ namespace	ft
 	{
 	private:
 		typedef node<typename remove_const<typename T::first_type>::type, typename T::second_type> node_type;
-		node_type	*_node;
 	public:
+		node_type	*_node;
 		bool		_lst;												
 		typedef	typename T::first_type				key_type;
 		typedef	typename T::second_type				mapped_type;
@@ -29,12 +29,14 @@ namespace	ft
 //---------- Constructors ----------//
 
 		map_iterator() : _node(NULL), _lst(0) {};
+
 		map_iterator( const map_iterator<typename remove_const<T>::type> & ref) : _lst(ref._lst)
 		{
 			*this = ref;
 			if (this->_node->leaf())
 				this->_lst = 1;
 		}
+
 		map_iterator( node_type * n ) : _node(n), _lst(0)
 		{
 			if (this->_node->leaf())
@@ -57,8 +59,7 @@ namespace	ft
 		{
 			this->_node = ref.get_node();
 			if (this->_node->leaf())
-				this->_lst = 1;
-			
+				this->_lst = 1;	
 		}
 	
 		T&	operator*() const
@@ -183,6 +184,11 @@ namespace	ft
 		T*		operator->() const 
 		{
 			return ((this->_node->data));
+		}
+
+		bool	leaf( void )
+		{
+			return (this->_node->leaf());
 		}
 
 	};
