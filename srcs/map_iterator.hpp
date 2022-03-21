@@ -154,6 +154,8 @@ namespace	ft
 				else if (this->_node->left)
 					this->_node = this->_node->left;
 			}
+			else if (this->_node->left)
+				this->_node = this->_node->left;
 			if (this->_node->leaf())
 				this->_lst = 1;
 			return (*this);
@@ -190,9 +192,7 @@ namespace	ft
 		{
 			return (this->_node->leaf());
 		}
-
 	};
-	
 }
 
 #endif

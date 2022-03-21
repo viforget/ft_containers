@@ -50,7 +50,7 @@ namespace	ft
 		reference operator*() const
 		{
 			iterator_type	tmp = this->_it;
-			tmp--;
+			//tmp--;
 			return(*tmp);
 		}
 
@@ -176,7 +176,6 @@ namespace	ft
 
 	template < class Iterator1, class Iterator2 >
 	bool	operator!=(reverse_iterator< Iterator1> const & a, reverse_iterator< Iterator2 > const & ref) {return ((a.base()) != (ref.base()));}
-
 
 };
 

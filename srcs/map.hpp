@@ -103,7 +103,7 @@ namespace	ft
 			{
 				node<Key, T>*	n = this->_root;
 
-				while(!n->left->leaf())
+				while(n->left && !n->left->leaf())
 					n = n->left;
 				return (const_iterator(n));
 			}
@@ -130,8 +130,9 @@ namespace	ft
 			{
 				node<Key, T>*	n = this->_root;
 
-				while(n->right && !n->left->leaf())
+				while(n->right && !n->right->leaf())
 					n = n->right;
+				std::cout << n->data->first << std::endl;
 				return (reverse_iterator(n));
 			}
 
@@ -139,7 +140,7 @@ namespace	ft
 			{
 				node<Key, T>*	n = this->_root;
 
-				while(n->right && !n->left->leaf())
+				while(n->right && !n->right->leaf())
 					n = n->right;
 				return (const_reverse_iterator(n));
 			}
@@ -469,6 +470,8 @@ namespace	ft
 			it++;
 			ite++;
 		}
+		if (it.get_node()->leaf() && ite.get_node()->leaf())
+			return (1);
 		if (*it != *ite)
 		{
 			return (0);
@@ -512,7 +515,7 @@ namespace	ft
 	template< class Key, class T, class Compare, class Alloc >
 	bool operator>( const map<Key,T,Compare,Alloc>& lhs, const map<Key,T,Compare,Alloc>& rhs )
 	{
-		return (rhs > lhs);
+		return (rhs < lhs);
 	}
 
 	template< class Key, class T, class Compare, class Alloc >
