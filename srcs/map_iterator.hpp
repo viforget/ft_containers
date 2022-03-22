@@ -41,7 +41,6 @@ namespace	ft
 		{
 			if (this->_node->leaf())
 				this->_lst = 1;
-			//std::cout << this->_lst << std::endl;
 		}
 
 //---------- Destructor ----------//

@@ -132,7 +132,6 @@ namespace	ft
 
 				while(n->right && !n->right->leaf())
 					n = n->right;
-				std::cout << n->data->first << std::endl;
 				return (reverse_iterator(n));
 			}
 
@@ -197,9 +196,9 @@ namespace	ft
 
 				while(!n->leaf())
 				{
-					if (this->_comp(n->data->first, k))
+					if (this->_comp(k, n->data->first))
 						n = n->left;
-					else if (this->_comp(k, n->data->first))
+					else if (this->_comp(n->data->first, k))
 						n = n->right;
 					else 
 						return (n->data->second);
@@ -308,12 +307,12 @@ namespace	ft
 			iterator find (const key_type& k)
 			{
 				node<Key, T> *	n = this->_root;
-				
+
 				while(!n->leaf())
 				{
-					if (this->_comp(n->data->first, k))
+					if (this->_comp(k, n->data->first))
 						n = n->left;
-					else if (this->_comp(k, n->data->first))
+					else if (this->_comp(n->data->first, k))
 						n = n->right;
 					else 
 						return (iterator(n));
@@ -327,10 +326,10 @@ namespace	ft
 				
 				while(!n->leaf())
 				{
-					if (this->_comp(n->data->first, k))
-						n = n->right;
-					else if (this->_comp(k, n->data->first))
+					if (this->_comp(k, n->data->first))
 						n = n->left;
+					else if (this->_comp(n->data->first, k))
+						n = n->right;
 					else 
 						return (const_iterator(n));
 				}
@@ -411,41 +410,12 @@ namespace	ft
 
 			pair<iterator,iterator>             equal_range (const key_type& k)
 			{
-				node<Key, T> *	n = this->_root;
-				
-				
-				while(!n->leaf())
-				{
-					if (this->_comp(n->data->first, k))
-						n = n->left;
-					else if (this->_comp(k, n->data->first))
-						n = n->right;
-					else 
-					{
-						return (pair<iterator,iterator>(iterator(n), ++iterator(n)));
-					}
-				}
-				return (pair<iterator,iterator>(iterator(this->end()), this->end()));
+				return (pair<iterator,iterator>(this->lower_bound(k), this->upper_bound(k)));
 			}
 
 			pair<const_iterator,const_iterator> equal_range (const key_type& k) const
 			{
-				node<Key, T> *	n = this->_root;
-				
-				
-				while(!n->leaf())
-				{
-					if (this->_comp(n->data->first, k))
-						n = n->left;
-					else if (this->_comp(k, n->data->first))
-						n = n->right;
-					else 
-					{
-						
-						return (pair<const_iterator,const_iterator>(const_iterator(n), ++const_iterator(n)));
-					}
-				}
-				return (pair<const_iterator, const_iterator>(const_iterator(this->end()), this->end()));
+				return (pair<const_iterator, const_iterator>(this->lower_bound(k), this->upper_bound(k)));
 			}
 
 //---------- Allocator ----------//
@@ -472,11 +442,8 @@ namespace	ft
 		}
 		if (it.get_node()->leaf() && ite.get_node()->leaf())
 			return (1);
-		if (*it != *ite)
-		{
-			return (0);
-		}
-		return (1);
+		return (0);
+
 	}
 
 	template< class Key, class T, class Compare, class Alloc >
