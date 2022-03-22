@@ -128,42 +128,22 @@ namespace	ft
 
 			reverse_iterator rbegin()
 			{
-				node<Key, T>*	n = this->_root;
-
-				while(n->right && !n->right->leaf())
-					n = n->right;
-				return (reverse_iterator(n));
+				return (reverse_iterator(this->end()));
 			}
 
 			const_reverse_iterator rbegin() const
 			{
-				node<Key, T>*	n = this->_root;
-
-				while(n->right && !n->right->leaf())
-					n = n->right;
-				return (const_reverse_iterator(n));
+				return (const_reverse_iterator(this->end()));
 			}
 
 			reverse_iterator rend()
 			{
-				node<Key, T>*	n = this->_root;
-
-				while(n->left)
-				{
-					n = n->left;
-				}
-				return (reverse_iterator(n));
+				return (reverse_iterator(this->begin()));
 			}
 
 			const_reverse_iterator rend() const
 			{
-				node<Key, T>*	n = this->_root;
-
-				while(n->left)
-				{
-					n = n->left;
-				}
-				return (const_reverse_iterator(n));
+				return (const_reverse_iterator(this->begin()));
 			}
 
 //---------- Capacity ----------//
@@ -338,18 +318,9 @@ namespace	ft
 
 			size_type count (const key_type& k) const
 			{
-				node<Key, T> *	n = this->_root;
-				
-				while(!n->leaf())
-				{
-					if (this->_comp(n->data->first, k))
-						n = n->left;
-					else if (this->_comp(k, n->data->first))
-						n = n->right;
-					else 
-						return (1);
-				}
-				return (0);
+				if (this->find(k) == this->end())
+					return (0);
+				return (1);
 			}
 
 			iterator lower_bound (const key_type& k)
@@ -457,8 +428,6 @@ namespace	ft
 	{
 		typename ft::map<Key, T>::const_iterator	it = lhs.begin(), ite = rhs.begin(), end = lhs.end(), en = rhs.end();
 	
-		if (lhs.size() < rhs.size())
-			return (true);
 		while(it != end && ite != en)
 		{
 			if (*it < *ite)
@@ -468,6 +437,8 @@ namespace	ft
 			it++;
 			ite++;
 		}
+		if (lhs.size() < rhs.size())
+			return (true);
 		return (false);
 	}
 

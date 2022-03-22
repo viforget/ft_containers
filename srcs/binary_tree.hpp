@@ -257,16 +257,8 @@ namespace ft
 
 					if (this->left->size() > this->right->size())
 					{
-						while(!nd->left->leaf())
-							nd = nd->left;
-						tmp = this->data;
-						this->data = nd->data;
-						nd->data = tmp;
-						if (nd->parent)
-							nd->parent->left->node_to_leaf();
-					}
-					else
-					{
+						if (!nd->leaf())
+							nd = this->left;
 						while(!nd->right->leaf())
 							nd = nd->right;
 						tmp = this->data;
@@ -274,6 +266,24 @@ namespace ft
 						nd->data = tmp;
 						if (nd->parent)
 							nd->parent->right->node_to_leaf();
+						else
+							this->node_to_leaf();
+					}
+					else
+					{
+						if (!nd->leaf())
+							nd = nd->right;
+						while(!nd->left->leaf())
+							nd = nd->left;
+						tmp = this->data;
+						this->data = nd->data;
+						nd->data = tmp;
+						if (nd->parent)
+						{
+							nd->node_to_leaf();
+						}
+						else
+							nd->node_to_leaf();
 					}
 					//alloc.destroy(this);
 					//alloc.deallocate(this, 1);

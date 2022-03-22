@@ -50,7 +50,7 @@ namespace	ft
 		reference operator*() const
 		{
 			iterator_type	tmp = this->_it;
-			//tmp--;
+			tmp--;
 			return(*tmp);
 		}
 
@@ -114,7 +114,10 @@ namespace	ft
 
 		pointer				operator->( void ) const
 		{
-			return &(this->operator*());
+			reverse_iterator	tmp = *this;
+
+			//tmp--;
+			return &(*tmp);
 		}
 
 		// bool				operator<(reverse_iterator const & ref) {return ((this->_it) > (ref._it));}
