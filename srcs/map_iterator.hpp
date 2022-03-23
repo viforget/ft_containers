@@ -157,6 +157,8 @@ namespace	ft
 				this->_node = this->_node->left;
 			if (this->_node->leaf())
 				this->_lst = 1;
+			else
+				this->_lst = 0;
 			return (*this);
 		}
 

@@ -162,18 +162,11 @@ namespace ft
 			{
 				std::allocator<node>	alloca;
 				
-				//std::cout << "A" << std::endl;
 				if (!this->leaf())
 				{
 					this->left->delete_tree(alloc);
 					this->right->delete_tree(alloc);
 				}
-				// if (this->data)
-				// {
-				// 	alloc.destroy(this->data);
-				// 	alloc.deallocate(this->data, 1);
-				// }
-				// std::cout << this->data->second << std::endl << std::endl;
 				alloca.destroy(this);
 				alloca.deallocate(this, 1);
 			}
@@ -234,62 +227,101 @@ namespace ft
 				}
 			}
 
+			void	switch_node(node *ref)
+			{
+				ft::pair<const Key, T>	*tmp;
+
+				//switch data between this and ref
+				tmp = ref->data;
+				ref->data = this->data;
+				this->data = tmp;
+			}
 
 			//Erase the node with de data with the key k. set his longest child at his place and insert is shortest child in the longest one
-			size_t	erase(Key k)
+			node*	erase(Key k)
 			{
 				std::allocator<node>	alloc;
 
 				if (this->leaf())
-					return(0);
+					return(NULL);
+				// Findind the node to erase
 				else if (this->comp(this->data->first, k))
 				{
-					return (this->right->erase(k));
+					return (this->right->erase(k) == NULL ? NULL : this);
 				}
 				else if (this->comp(k, this->data->first))
 				{
-					return (this->left->erase(k));
+					return (this->left->erase(k) == NULL ? NULL : this);
 				}
+				// node found; now chose how to erase it
 				else
 				{
-					node					*nd = this;
-					ft::pair<const Key, T>	*tmp;
-
-					if (this->left->size() > this->right->size())
+					//if he has no child : easy
+					if (this->left->leaf() && this->right->leaf())
 					{
-						if (!nd->leaf())
-							nd = this->left;
-						while(!nd->right->leaf())
-							nd = nd->right;
-						tmp = this->data;
-						this->data = nd->data;
-						nd->data = tmp;
-						if (nd->parent)
-							nd->parent->right->node_to_leaf();
-						else
-							this->node_to_leaf();
+						this->node_to_leaf();
+						return (this);
 					}
-					else
+					//if ir has one child, this child take its place
+					else if (!this->left->leaf() && this->right->leaf())
 					{
-						if (!nd->leaf())
-							nd = nd->right;
-						while(!nd->left->leaf())
-							nd = nd->left;
-						tmp = this->data;
-						this->data = nd->data;
-						nd->data = tmp;
-						if (nd->parent)
+						node *tmp;
+						
+						if (this->side == L)
+							this->parent->left = this->left;
+						else if (this->side == R)
+							this->parent->right = this->left;
+						this->left->parent = this->parent;
+						this->left->side = this->side;
+						tmp = this->left;
+						alloc.destroy(this);
+						alloc.deallocate(this, 1);
+						return (tmp);
+					}
+					else if (this->left->leaf() && !this->right->leaf())
+					{
+						node *tmp;
+
+						if (this->side == L && this->parent)
+							this->parent->left = this->right;
+						else if (this->side == R && this->parent)
+							this->parent->right = this->right;
+						this->right->parent = this->parent;
+						this->right->side = this->side;
+						tmp = this->right;
+						alloc.destroy(this);
+						alloc.deallocate(this, 1);
+						return (tmp);
+					}
+					//if it has 2 child
+					else if (!this->left->leaf() && !this->right->leaf())
+					{
+						if (this->left->size() > this->right->size())
 						{
-							nd->node_to_leaf();
+							node	*nd = this->left;
+
+							while (!nd->right->leaf())
+							{
+								nd = nd->right;
+							}
+							this->switch_node(nd);
+							nd->erase(k);
 						}
 						else
-							nd->node_to_leaf();
-					}
-					//alloc.destroy(this);
-					//alloc.deallocate(this, 1);
-					return (1);
-				}
+						{
+							node	*nd = this->right;
 
+							while (!nd->left->leaf())
+							{
+								nd = nd->left;
+							}
+							this->switch_node(nd);
+							nd->erase(k);
+						}
+					}
+					return (this);
+				}
+				return (this);
 			}
 	};
 }

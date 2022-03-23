@@ -64,9 +64,10 @@ namespace	ft
 
 			//Third constructor; take an other map
 			//Create a deep copy of the first map
-			map (const map& x) : _root(NULL), _comp(x._comp), _alloc(x._alloc)
+			map (const map& x) : _root(new node<key_type, mapped_type>), _comp(x._comp), _alloc(x._alloc)
 			{
-				*this = x;
+				//*this = x;
+				this->insert(x.begin(), x.end());
 			}
 
 //---------- Destructor ----------//
@@ -203,21 +204,67 @@ namespace	ft
 			template <class InputIterator>
 			void insert (InputIterator first, InputIterator last)
 			{
-				while (first != last)
+				InputIterator it = first;
+				size_t i = 0;
+
+				if (first == last)
+					return ;
+				// counnt the number of iterators
+				while (it != last)
 				{
-					this->_root->insert(*first, this->_alloc);
-					first++;
+					i++;
+					it++;
+				}
+				it--;
+				// if this numbers is 1, insert it
+				if (i == 1)
+				{
+					this->_root->insert(*it, this->_alloc);
+				}
+				// else, insert the iterator of the midle and call recursively insert
+				//  1  2  3  4  5
+				// [1  2] 3 [4  5]
+				else
+				{
+					i = i / 2;
+					while(i > 0)
+					{
+						i--;
+						it--;
+					}
+					if (it != last)
+					{
+						// (3)
+						this->_root->insert(*it, this->_alloc);
+					}
+					//[1 2]
+					if (first != it)
+					{
+						this->insert(first, it);
+					}
+					it++;
+					//[4 5]
+					if (it != last)
+					{
+						this->insert(it, last);
+					}
 				}
 			}
 
 			void erase (iterator position)
 			{
-				this->_root->erase((*position).first);
+				this->erase((*position).first);
 			}
 
 			size_type erase (const key_type& k)
 			{
-				return (this->_root->erase(k));
+				node<Key, T>* tmp;
+
+				tmp = this->_root->erase(k);
+				if (tmp == NULL)
+					return (0);
+				this->_root = tmp;
+				return (1);
 			}
 
 			void erase (iterator first, iterator last)
