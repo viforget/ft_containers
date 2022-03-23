@@ -269,11 +269,21 @@ namespace	ft
 
 			void erase (iterator first, iterator last)
 			{
+				/*iterator tmp = first;
+
 				while (first != last)
 				{
-					this->erase(first);
-					first++;
-				}
+					++tmp;
+					this->erase(first->first);
+					if (tmp != last)
+						std::cout << tmp->first << std::endl;
+					first = tmp;
+				}*/
+				key_type tmp = first->first;
+				first++;
+				if (first != last)
+					this->erase(first, last);
+				this->erase(tmp);
 			}
 
 			void swap (map& x)

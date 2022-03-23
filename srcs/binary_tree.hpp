@@ -92,7 +92,6 @@ namespace ft
 			//Check if the node is a leaf
 			bool	leaf()
 			{
-				//std::cout << this << std::endl;
 				if (static_cast<void *>(this) == NULL)
 					return (true);
 				switch ((this->left != NULL) + (this->right != NULL))
@@ -241,7 +240,6 @@ namespace ft
 			node*	erase(Key k)
 			{
 				std::allocator<node>	alloc;
-
 				if (this->leaf())
 					return(NULL);
 				// Findind the node to erase
