@@ -408,6 +408,7 @@ namespace	ft
 		{
 			size_t i = 0;
 
+			iterator tmp = position;
 			for (iterator it = this->begin(); it < position; it++)
 			{
 				i++;
@@ -419,7 +420,7 @@ namespace	ft
 				position++;
 			}
 			this->_size--;
-			return(position);
+			return(tmp);
 		}
 
 		//erase : delete every data in the vector between first and last
