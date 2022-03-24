@@ -7,7 +7,6 @@
 # include <functional>
 
 # include "map_utils.hpp"
-// # include "map_iterator.hpp"
 
 # define L 0
 # define R 1
@@ -39,9 +38,6 @@ namespace ft
 
 			// Leaf constructor; create a node with a parent but both child as NULL, no leaf node cannot have NULL as child
 			node( node * par, bool sid ) : parent(par), left(NULL), right(NULL), data(NULL), side(sid) {}
-
-			//Node constructor; create a node and give it a value
-			// node( node * par, const value_type& val, bool sid ) : parent(par), left(new node(this), L), right(new node(this), R), side(sid) {}
 
 			// Copy constructor
 			node( const node & ref ) : parent(ref.parent), left(ref.left), right(ref.right), side(ref.side)
@@ -265,9 +261,9 @@ namespace ft
 					{
 						node *tmp;
 						
-						if (this->side == L)
+						if (this->side == L && this->parent)
 							this->parent->left = this->left;
-						else if (this->side == R)
+						else if (this->side == R && this->parent)
 							this->parent->right = this->left;
 						this->left->parent = this->parent;
 						this->left->side = this->side;

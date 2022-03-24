@@ -21,6 +21,16 @@ namespace	ft
 			Compare			_comp;
 			Alloc			_alloc;
 
+
+			node<Key, T> *	new_node()
+			{
+				std::allocator<node<key_type, mapped_type> >	alloca;
+				node<key_type, mapped_type>	*					return_value;
+
+				return_value = alloca.allocate(1);
+				alloca.construct(return_value, node<Key, T>());
+				return (return_value);
+			}
 		public:
 //---------- Member types ----------//
 
@@ -44,7 +54,7 @@ namespace	ft
 			//Basic constructor; create an empty binary tree (only a leaf)
 			explicit map (const key_compare& comp = key_compare(),
             	 const allocator_type& alloc = allocator_type())
-				 : _root(new node<key_type, mapped_type>), _comp(comp), _alloc(alloc)
+				 : _root(new_node()), _comp(comp), _alloc(alloc)
 			{
 				std::allocator<node<key_type, mapped_type> >	alloca;
 
@@ -57,14 +67,14 @@ namespace	ft
 			map (InputIterator first, InputIterator last,
 			 		const key_compare& comp = key_compare(),
 			 		const allocator_type& alloc = allocator_type())
-					:  _root(new node<key_type, mapped_type>), _comp(comp), _alloc(alloc)
+					:  _root(new_node()), _comp(comp), _alloc(alloc)
 			{
 				this->insert(first, last);
 			}
 
 			//Third constructor; take an other map
 			//Create a deep copy of the first map
-			map (const map& x) : _root(new node<key_type, mapped_type>), _comp(x._comp), _alloc(x._alloc)
+			map (const map& x) : _root(new_node()), _comp(x._comp), _alloc(x._alloc)
 			{
 				//*this = x;
 				this->insert(x.begin(), x.end());
@@ -166,7 +176,6 @@ namespace	ft
 				std::allocator<node<Key, T> >	alloca;
 
 				return(alloca.max_size());
-				// return (288230376151711743);
 			}
 
 //---------- Element Acess ----------//
@@ -269,16 +278,6 @@ namespace	ft
 
 			void erase (iterator first, iterator last)
 			{
-				/*iterator tmp = first;
-
-				while (first != last)
-				{
-					++tmp;
-					this->erase(first->first);
-					if (tmp != last)
-						std::cout << tmp->first << std::endl;
-					first = tmp;
-				}*/
 				key_type tmp = first->first;
 				first++;
 				if (first != last)
@@ -304,7 +303,7 @@ namespace	ft
 			{
 				if (this->_root)
 					this->_root->delete_tree(this->_alloc);
-				this->_root = new node<key_type, mapped_type>;
+				this->_root = new_node();
 			}
 
 //---------- Observers ----------//

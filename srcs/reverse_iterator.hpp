@@ -3,8 +3,6 @@
 
 # include <iostream>
 # include <memory>
-//# include "vector.hpp"
-//# include "iterator.hpp"
 # include "utils.hpp"
 
 namespace	ft
@@ -114,18 +112,8 @@ namespace	ft
 
 		pointer				operator->( void ) const
 		{
-			reverse_iterator	tmp = *this;
-
-			//tmp--;
-			return &(*tmp);
+			return &(this->operator*());
 		}
-
-		// bool				operator<(reverse_iterator const & ref) {return ((this->_it) > (ref._it));}
-		// bool				operator<=(reverse_iterator const & ref) {return ((this->_it) >= (ref._it));}
-		// bool				operator>(reverse_iterator const & ref) {return ((this->_it) < (ref._it));}
-		// bool				operator>=(reverse_iterator const & ref) {return ((this->_it) <= (ref._it));}
-		// bool				operator==(reverse_iterator const & ref) {return ((this->_it) == (ref._it));}
-		// bool				operator!=(reverse_iterator const & ref) {return ((this->_it) != (ref._it));}
 			
 		friend bool	operator<(reverse_iterator const & a, reverse_iterator const & ref) {return ((a._it) > (ref._it));}
 		friend bool	operator<=(reverse_iterator const & a, reverse_iterator const & ref) {return ((a._it) >= (ref._it));}

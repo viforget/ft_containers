@@ -7,10 +7,6 @@
 
 namespace	ft
 {
-	// template<class Key, class T, class Compare = std::less<Key>,
-	// 	class Alloc
-	//struct node;
-
 	template <class T>
 	class map_iterator
 	{

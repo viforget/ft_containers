@@ -38,13 +38,6 @@ namespace	ft
 			~random_iterator( void ) {};
 			
 //---------- Operators ----------//
-	
-
-			// random_iterator &  operator= (const random_iterator & rhs)
-			// {
-			// 	this->_pointer = rhs._pointer;
-			// 	return (*this);
-			// }
 
 			random_iterator<T> &  operator= (const random_iterator<typename remove_const<T>::type > & rhs)
 			{

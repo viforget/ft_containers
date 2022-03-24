@@ -61,8 +61,6 @@ namespace	ft
 		{
 			InputIterator first2 = first;
 			
-			//if (first > last)
-			//	throw(std::length_error("vector"));
 			for (; first2 != last; first2++)
 				this->_size++;
 			this->_array = this->_alloc.allocate(this->_size);
@@ -223,8 +221,6 @@ namespace	ft
 
 				while(nb < n)
 					nb *= 2;
-				//if (nb > this->max_size())
-				//	nb = this->max_size();
 				array = this->_alloc.allocate(nb);
 				for (size_t i = 0; i < this->_size; i++)
 				{
@@ -304,8 +300,6 @@ namespace	ft
 				last2--;
 				s++;
 			}
-			//if (first > last)
-			//	throw(std::length_error("vector"));
 			this->resize(0);
 			this->reserve(s);
 			this->_size = s;
