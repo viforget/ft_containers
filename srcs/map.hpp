@@ -56,10 +56,6 @@ namespace	ft
             	 const allocator_type& alloc = allocator_type())
 				 : _root(new_node()), _comp(comp), _alloc(alloc)
 			{
-				std::allocator<node<key_type, mapped_type> >	alloca;
-
-				this->_root = alloca.allocate(1);
-				alloca.construct(this->_root, node<key_type, mapped_type>());
 			}
 
 			
